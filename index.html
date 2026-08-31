@@ -1,15 +1,16 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>body{background:#0e0e12;color:#fff;font-family:sans-serif;padding:12px;margin:0}.card{background:#1a1a23;padding:14px;border-radius:12px;margin:10px 0;border-left:5px solid #444;position:relative}.topbar{display:flex;justify-content:space-between;align-items:center;background:#111;padding:12px;border-radius:12px;border:1px solid gold}button{padding:10px 18px;border-radius:8px;border:none;font-weight:900;cursor:pointer;background:gold;color:#000}button:disabled{background:#333!important;color:#777!important}.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px}.dot-won{background:#00ff88;box-shadow:0 0 8px #00ff88}.dot-lost{background:#ff4444}.dot-pending{background:#ffcc00;animation:blink 1s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}} .bet-won{border-left-color:#00ff88!important;background:linear-gradient(90deg,rgba(0,255,136,.15),transparent)!important}.bet-lost{border-left-color:#ff4444!important;background:linear-gradient(90deg,rgba(255,51,68,.15),transparent)!important}.bet-pending{border-left-color:#ffcc00!important;background:linear-gradient(90deg,rgba(255,204,0,.15),transparent)!important} .time-label{font-size:12px;color:#aaa} .closed{display:none!important}</style></head><body>
-<div class="topbar"><h2 style="color:gold;margin:0">SLIMBET PRO</h2><div>Saldo: €<span id="saldo">0.00</span></div></div>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>body{background:#0e0e12;color:#fff;font-family:sans-serif;padding:12px;margin:0}.card{background:#1a1a23;padding:14px;border-radius:12px;margin:10px 0;border-left:5px solid #444}.topbar{display:flex;justify-content:space-between;align-items:center;background:#111;padding:12px;border-radius:12px;border:1px solid gold}button{padding:10px 18px;border-radius:8px;border:none;font-weight:900;cursor:pointer;background:gold;color:#000}button:disabled{background:#333!important;color:#777!important}.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px}.dot-won{background:#00ff88;box-shadow:0 0 8px #00ff88}.dot-lost{background:#ff4444}.dot-pending{background:#ffcc00;animation:blink 1s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}.bet-won{border-left-color:#00ff88!important}.bet-lost{border-left-color:#ff4444!important}.bet-pending{border-left-color:#ffcc00!important}.time-label{font-size:12px;color:#aaa}.closed{display:none!important}</style></head><body>
+<div class="topbar"><h2 style="color:gold;margin:0">SLIMBET PRO</h2><div>Saldo: €<span id="saldo">125.00</span></div></div>
 
-<h3 style="color:gold;margin-top:18px">⚽ Partite Oggi - Chiudono all'orario</h3>
+<h3 style="color:gold;margin-top:18px">⚽ OGGI 31 AGO - Partite Reali</h3>
 <div id="matchesList">
-<div class="card match-card" data-start="20:45"><b>Juventus vs Milan</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Juventus vs Milan',2.10)">Scommetti @2.10</button></div>
-<div class="card match-card" data-start="21:00"><b>Napoli vs Inter</b><br><small class="time-label">Inizio: 21:00</small><br><button onclick="piazza(this,'Napoli vs Inter',1.95)">Scommetti @1.95</button></div>
-<div class="card match-card" data-start="18:30"><b>Roma vs Lazio</b><br><small class="time-label">Inizio: 18:30</small><br><button onclick="piazza(this,'Roma vs Lazio',2.40)">Scommetti @2.40</button></div>
-<div class="card match-card" data-start="20:41"><b>Test 20:41 (scade ora)</b><br><small class="time-label">Inizio: 20:41</small><br><button onclick="piazza(this,'Test',2.00)">Scommetti @2.00</button></div>
+<div class="card match-card" data-start="21:00"><b>🏴󠁧󠁢󠁥󠁮󠁧󠁿 Aston Villa vs Arsenal - Premier</b><br><small class="time-label">Inizio: 21:00 - Chiude alle 21:00</small><br><button onclick="piazza(this,'Aston Villa vs Arsenal',2.85)">Scommetti @2.85</button></div>
+<div class="card match-card" data-start="21:30"><b>🇪🇸 Barcellona vs Rayo Vallecano - LaLiga</b><br><small class="time-label">Inizio: 21:30 - Chiude alle 21:30</small><br><button onclick="piazza(this,'Barcellona vs Rayo Vallecano',1.35)">Scommetti @1.35</button></div>
+<div class="card match-card" data-start="20:45" style="opacity:0.4"><b>🇮🇹 Lecce vs Roma - FINITA 0-4 FT</b><br><small class="time-label">FINITA</small><br><button disabled>FINITA ⛔</button></div>
+<div class="card match-card" data-start="20:45" style="opacity:0.4"><b>🇮🇹 Atalanta vs Bologna - LIVE 10' 0-0</b><br><small class="time-label" style="color:orange">LIVE</small><br><button disabled>LIVE ⛔</button></div>
+<div class="card match-card" data-start="19:00" style="opacity:0.4"><b>🇪🇸 Osasuna vs Getafe - LIVE 60' 1-0</b><br><small class="time-label" style="color:orange">LIVE</small><br><button disabled>LIVE ⛔</button></div>
 </div>
 
-<h3 style="color:gold">🎯 Le Mie Scommesse <span style="font-size:12px;color:#888">(🟢 Vinta / 🔴 Persa / 🟡 In corso)</span></h3>
+<h3 style="color:gold">🎯 Le Mie Scommesse</h3>
 <div id="betsList"></div>
 
 <script>
@@ -23,20 +24,8 @@ function checkTime(){
     const t=card.dataset.start; if(!t) return;
     const [h,m]=t.split(':').map(Number);
     const start=new Date(); start.setHours(h,m,0,0);
-    const btn=card.querySelector('button');
-    const label=card.querySelector('.time-label');
-    if(now>=start){
-      card.classList.add('closed'); // TOLTA DALLA LISTA
-    }else{
-      const diff=Math.floor((start-now)/60000);
-      if(diff<=15 && diff>=0){
-        label.innerHTML=`⚠️ Chiude tra ${diff} min! - ${t}`;
-        label.style.color='orange';
-        btn.style.background='orange';
-      } else {
-        label.innerHTML=`Inizio: ${t}`;
-      }
-      card.classList.remove('closed');
+    if(now>=start && !card.innerHTML.includes('FINITA') && !card.innerHTML.includes('LIVE')){
+      card.classList.add('closed');
     }
   });
 }
@@ -46,11 +35,10 @@ function piazza(btn,match,odd){
   const card=btn.closest('.match-card');
   const [h,m]=card.dataset.start.split(':').map(Number);
   const start=new Date(); start.setHours(h,m,0,0);
-  if(new Date()>=start){ alert("⛔ Scommessa chiusa! Partita iniziata alle "+card.dataset.start); card.classList.add('closed'); return; }
+  if(new Date()>=start){ alert("⛔ Chiusa alle "+card.dataset.start); card.classList.add('closed'); return; }
   const stake=prompt(`Quanto punti su ${match} @${odd}?`);
   if(!stake) return;
   const pot=(parseFloat(stake)*odd).toFixed(2);
-  const betsDiv=document.getElementById('betsList');
-  betsDiv.innerHTML=`<div class="card bet-pending"><span class="dot dot-pending"></span><b>${match}</b><small style="float:right;color:#ffcc00">IN CORSO 🟡</small><br><small>Stake: €${stake} @${odd} | Vincita: €${pot}</small></div>`+betsDiv.innerHTML;
+  document.getElementById('betsList').innerHTML=`<div class="card bet-pending"><span class="dot dot-pending"></span><b>${match}</b><small style="float:right;color:#ffcc00">IN CORSO 🟡</small><br><small>Stake €${stake} @${odd} - Vincita €${pot}</small></div>`+document.getElementById('betsList').innerHTML;
 }
 </script></body></html>
