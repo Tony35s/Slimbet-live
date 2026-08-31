@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SLIMBET LIVE</title>
+<style>body{margin:0;background:#0a0a12;color:#fff;font-family:system-ui}.top{display:flex;justify-content:space-between;padding:14px;background:#12121f;border-bottom:2px solid #d4af37}.card{background:#1c1c2a;margin:10px;padding:12px;border-radius:12px}.q{display:flex;gap:6px}.q button{flex:1;padding:10px;background:#222;border:1px solid #d4af37;color:#fff;border-radius:8px}</style>
+</head>
+<body>
+<div class="top"><b>🛡️ SLIMBET</b><span id="saldo">0€ VIRT</span></div>
+<div id="login" class="card">
+<input id="email" placeholder="tua email" style="width:100%;padding:10px">
+<input id="promo" placeholder="SLIMBET50 / 20 / 10" style="width:100%;padding:10px;margin-top:6px">
+<button onclick="go()" style="width:100%;margin-top:8px;padding:12px;background:#d4af37;color:#000;font-weight:900;border-radius:8px">ATTIVA</button>
+</div>
+<div id="list"></div>
+<script>
+const CODES={SLIMBET10:10,SLIMBET20:20,SLIMBET50:50};
+let saldo=Number(localStorage.getItem('sb_saldo')||0);
+let user=JSON.parse(localStorage.getItem('sb_user')||'null');
+document.getElementById('saldo').innerText=saldo+'€ VIRT';
+function go(){
+ const email=document.getElementById('email').value.trim();
+ const code=document.getElementById('promo').value.trim().toUpperCase();
+ if(!email)return alert('Email');
+ if(code &&!CODES[code])return alert('Codice non valido');
+ if(!user){saldo=CODES[code]||0;localStorage.setItem('sb_saldo',saldo);localStorage.setItem('sb_user',JSON.stringify({email}));}
+ document.getElementById('login').style.display='none'; loadLive();
+}
+async function loadLive(){
+ const sports=['soccer_italy_serie_a','soccer_epl','soccer_spain_la_liga','soccer_germany_bundesliga','soccer_uefa_champs_league','basketball_nba','tennis_atp_french_open','mma_mixed_martial_arts'];
+ let html='';
+ for(let s of sports){
+  try{
+   const r=await fetch(`/api/odds?sport=${s}`);
+   const d=await r.json();
+   d.slice(0,4).forEach(m=>{
+     const b=m.bookmakers[0]?.markets[0]?.outcomes; if(!b)return;
+     html+=`<div class="card"><small style="color:#d4af37">${m.sport_title}</small><div>${m.home_team} vs ${m.away_team}</div><div class="q">${b.map(o=>`<button onclick="bet('${o.name}',${o.price})">${o.name} ${o.price}</button>`).join('')}</div></div>`;
+   });
+  }catch(e){}
+ }
+ document.getElementById('list').innerHTML=html; document.getElementById('saldo').innerText=saldo+'€ VIRT';
+}
+function bet(n,p){if(saldo<5)return alert('Saldo finito');saldo-=5;localStorage.setItem('sb_saldo',saldo);document.getElementById('saldo').innerText=saldo+'€ VIRT - '+n+' @'+p;}
+if(user){document.getElementById('login').style.display='none';loadLive();}
+if(location.search.includes('admin') && user?.email!=='sottile1996@gmail.com'){document.body.innerHTML='<h2>Accesso negato</h2>';}
+</script>
+</body>
+</html>
