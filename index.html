@@ -85,7 +85,7 @@ function place(){let st=parseFloat(document.getElementById('stake').value)||5;if
 function renderMy(){let el=document.getElementById('my');if(!myBets.length){el.innerHTML='<div style="opacity:.5">Nessuna giocata</div>';return}el.innerHTML=myBets.map(b=>`<div class="bet-h"><b>${b.date}</b> - ${b.stake}€ @${b.total}<br>${b.picks.map(p=>p.match+' '+p.t).join('<br>')}<br><span style="color:#ffcc00">Potenziale: ${b.pot}€</span></div>`).join('');}
 
 loadLive();
-setInterval(loadLive, 600000); // ogni 10 minuti si aggiorna da solo
+setInterval(loadLive, 3600000); // ogni 10 minuti si aggiorna da solo
 </script>
 </body>
 </html>
