@@ -1,49 +1,187 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SLIMBET LIVE</title>
-<style>body{margin:0;background:#0a0a12;color:#fff;font-family:system-ui}.top{display:flex;justify-content:space-between;padding:14px;background:#12121f;border-bottom:2px solid #d4af37}.card{background:#1c1c2a;margin:10px;padding:12px;border-radius:12px}.q{display:flex;gap:6px}.q button{flex:1;padding:10px;background:#222;border:1px solid #d4af37;color:#fff;border-radius:8px}</style>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+body{background:#0e0e12;color:white}
+header{background:#15151c;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:2px solid #ffcc00;position:sticky;top:0;z-index:20}
+.logo{font-weight:900;font-size:22px}.logo span{color:#ffcc00}
+.saldo{background:#ffcc00;color:#000;padding:8px 14px;border-radius:8px;font-weight:800}
+.tabs{display:flex;gap:18px;background:#1a1a23;padding:10px 16px;border-bottom:1px solid #2a2a35;overflow-x:auto}
+.tab{cursor:pointer;opacity:0.6;padding-bottom:6px}.tab.active{opacity:1;color:#ffcc00;border-bottom:2px solid #ffcc00;font-weight:700}
+.container{display:flex;flex-wrap:wrap}
+.main{flex:1;min-width:320px;padding:12px;padding-bottom:120px}
+.league-title{background:#1f1f2b;padding:10px 14px;margin:18px 0 8px 0;border-radius:10px;font-weight:800;border-left:4px solid #ffcc00}
+.match-card{background:#1a1a23;border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid #2a2a35}
+.match-top{display:flex;justify-content:space-between;font-size:12px;color:#ffcc00;margin-bottom:8px}
+.match-teams{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.team{font-weight:700;width:40%}.vs{opacity:0.5}
+.odds{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.odd-btn{background:#2a2a35;border:1px solid #3a3a4a;border-radius:8px;padding:10px;text-align:center;cursor:pointer;font-weight:700}
+.odd-btn.selected{background:#ffcc00;color:#000}
+.schedina{width:380px;min-width:380px;background:#15151c;border-left:1px solid #2a2a35;padding:14px;position:sticky;top:66px;height:fit-content;max-height:calc(100vh - 70px);overflow-y:auto}
+@media(max-width:900px){.schedina{width:100%;min-width:100%;position:fixed;bottom:0;top:auto;max-height:65vh;border-radius:16px 16px 0 0;z-index:30}}
+.slip-item{background:#1f1f2b;padding:8px;border-radius:8px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between}
+.stake-box{background:#1f1f2b;padding:12px;border-radius:10px;margin:12px 0}
+.stake-input{width:100%;background:#0e0e12;border:1px solid #3a3a4a;color:white;padding:12px;border-radius:8px;margin-top:6px;font-size:16px}
+.btn-gold{background:#ffcc00;color:#000;width:100%;padding:14px;border:none;border-radius:10px;font-weight:900;font-size:16px;cursor:pointer;margin-top:10px}
+.my-bets{margin-top:18px;border-top:1px solid #2a2a35;padding-top:12px}
+.bet-history{background:#1f1f2b;border-radius:10px;padding:10px;margin-bottom:10px;border-left:4px solid #888}
+.bet-history.won{border-left-color:#22c55e}.bet-history.lost{border-left-color:#ef4444}.bet-history.live{border-left-color:#888}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot.gray{background:#888}.dot.green{background:#22c55e}.dot.red{background:#ef4444}
+.login-box{max-width:400px;margin:80px auto;background:#1a1a23;padding:20px;border-radius:16px;border:1px solid #2a2a35}
+.login-box input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #3a3a4a;background:#0e0e12;color:white}
+</style>
 </head>
 <body>
-<div class="top"><b>🛡️ SLIMBET</b><span id="saldo">0€ VIRT</span></div>
-<div id="login" class="card">
-<input id="email" placeholder="tua email" style="width:100%;padding:10px">
-<input id="promo" placeholder="SLIMBET50 / 20 / 10" style="width:100%;padding:10px;margin-top:6px">
-<button onclick="go()" style="width:100%;margin-top:8px;padding:12px;background:#d4af37;color:#000;font-weight:900;border-radius:8px">ATTIVA</button>
+<header><div class="logo">SLIMBET <span>LIVE</span></div><div style="display:flex;gap:10px;align-items:center"><div id="balance" class="saldo">0€</div><div id="userEmail" style="font-size:11px;opacity:0.6"></div></div></header>
+
+<div id="loginScreen" class="login-box">
+<h2>Accedi</h2>
+<input id="emailInput" placeholder="tua email">
+<input id="codeInput" placeholder="SLIMBET50 / 20 / 10">
+<button class="btn-gold" onclick="doLogin()">ATTIVA</button>
 </div>
-<div id="list"></div>
+
+<div id="app" style="display:none">
+<div class="tabs">
+<div class="tab active" onclick="setSport('calcio',this)">⚽ Calcio</div>
+<div class="tab" onclick="setSport('basket',this)">🏀 Basket</div>
+<div class="tab" onclick="setSport('tennis',this)">🎾 Tennis</div>
+<div class="tab" onclick="setSport('mma',this)">🥊 MMA</div>
+</div>
+<div class="container">
+<div class="main" id="matches"></div>
+<div class="schedina">
+<h2>Schedina <span id="count" style="font-size:14px;opacity:0.6"></span></h2>
+<div id="slipContent"><div style="opacity:0.5;text-align:center;padding:20px">Seleziona una quota</div></div>
+<div id="stakeArea" style="display:none">
+<div class="stake-box">
+<label>Importo puntata (modificabile)</label>
+<input type="number" id="stake" class="stake-input" value="5" min="1" max="100" step="1" oninput="updatePotential()">
+<div style="display:flex;justify-content:space-between;margin-top:10px"><span>Quota totale:</span><b id="totalOdd">0</b></div>
+<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:18px;color:#ffcc00"><span>Possibile vincita:</span><b id="potential">0.00 €</b></div>
+<button class="btn-gold" onclick="placeBet()">PIAZZA SCOMMESSA</button>
+</div>
+</div>
+
+<div class="my-bets">
+<h3 style="margin-bottom:8px">Le mie schedine</h3>
+<div id="myBetsList"></div>
+</div>
+
+</div>
+</div>
+</div>
+
 <script>
-const CODES={SLIMBET10:10,SLIMBET20:20,SLIMBET50:50};
-let saldo=Number(localStorage.getItem('sb_saldo')||0);
-let user=JSON.parse(localStorage.getItem('sb_user')||'null');
-document.getElementById('saldo').innerText=saldo+'€ VIRT';
-function go(){
- const email=document.getElementById('email').value.trim();
- const code=document.getElementById('promo').value.trim().toUpperCase();
- if(!email)return alert('Email');
- if(code &&!CODES[code])return alert('Codice non valido');
- if(!user){saldo=CODES[code]||0;localStorage.setItem('sb_saldo',saldo);localStorage.setItem('sb_user',JSON.stringify({email}));}
- document.getElementById('login').style.display='none'; loadLive();
+let balance=parseFloat(localStorage.getItem('balance')||'0');
+let user=localStorage.getItem('slim_user')||'';
+let currentSport='calcio';
+let slip=[];
+let allMatches=[];
+let myBets=JSON.parse(localStorage.getItem('myBets')||'[]');
+const PROMOS={SLIMBET50:50,SLIMBET20:20,SLIMBET10:10};
+
+function doLogin(){
+ let email=document.getElementById('emailInput').value.trim().toLowerCase();
+ let code=document.getElementById('codeInput').value.trim().toUpperCase();
+ if(!email.includes('@')){alert('Email non valida');return;}
+ if(!PROMOS[code]){alert('Codice non valido');return;}
+ if(localStorage.getItem('used_'+code)){alert('Codice già usato');return;}
+ balance+=PROMOS[code];
+ localStorage.setItem('balance',balance);
+ localStorage.setItem('slim_user',email);
+ localStorage.setItem('used_'+code,'1');
+ startApp();
 }
-async function loadLive(){
- const sports=['soccer_italy_serie_a','soccer_epl','soccer_spain_la_liga','soccer_germany_bundesliga','soccer_uefa_champs_league','basketball_nba','tennis_atp_french_open','mma_mixed_martial_arts'];
+function startApp(){
+ user=localStorage.getItem('slim_user');
+ document.getElementById('loginScreen').style.display='none';
+ document.getElementById('app').style.display='block';
+ document.getElementById('balance').innerText='Saldo: '+balance.toFixed(2)+'€';
+ document.getElementById('userEmail').innerText=user;
+ loadMatches(); renderMyBets();
+}
+function setSport(s,el){
+ currentSport=s;
+ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+ el.classList.add('active');
+ renderMatches();
+}
+async function loadMatches(){
+ try{
+  let res=await fetch('/api/odds'); let data=await res.json();
+  if(data.matches?.length){ allMatches=data.matches.map(m=>{let d=new Date(m.commence_time); return {...m,sport:detectSport(m.sport_key),league:mapLeague(m.sport_key),dateLabel:formatDate(d),timeLabel:d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),home:m.home_team,away:m.away_team,odds:extractOdds(m)}});}
+  else throw '';
+ }catch{ allMatches=mockMatches(); }
+ renderMatches();
+}
+function detectSport(k){ if(k.includes('basket')||k.includes('nba')) return 'basket'; if(k.includes('tennis')) return 'tennis'; if(k.includes('mma')||k.includes('ufc')) return 'mma'; return 'calcio'; }
+function mapLeague(k){ if(k.includes('serie_a')) return 'Serie A'; if(k.includes('epl')||k.includes('premier')) return 'Premier League'; if(k.includes('la_liga')) return 'La Liga'; if(k.includes('bundesliga')) return 'Bundesliga'; if(k.includes('champions')) return 'Champions League'; if(k.includes('nba')) return 'NBA'; if(k.includes('atp')) return 'ATP'; return 'Altro'; }
+function formatDate(d){ let now=new Date(); let tomorrow=new Date(); tomorrow.setDate(now.getDate()+1); if(d.toDateString()==now.toDateString()) return 'Oggi'; if(d.toDateString()==tomorrow.toDateString()) return 'Domani'; let days=['Dom','Lun','Mar','Mer','Gio','Ven','Sab']; return days[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1); }
+function extractOdds(m){ try{ let b=m.bookmakers[0].markets[0].outcomes; return {h:b.find(o=>o.name==m.home_team)?.price||1.9, a:b.find(o=>o.name==m.away_team)?.price||2.1, x:b.find(o=>o.name=='Draw')?.price||3.2}; }catch{ return {h:1.9,x:3.2,a:2.2}} }
+function mockMatches(){ let n=new Date(); return [{sport:'calcio',league:'Serie A',dateLabel:'Oggi',timeLabel:'20:45',home:'Inter',away:'Juventus',odds:{h:2.10,x:3.30,a:3.60}},{sport:'calcio',league:'Serie A',dateLabel:'Oggi',timeLabel:'18:30',home:'Milan',away:'Napoli',odds:{h:2.40,x:3.20,a:2.95}},{sport:'calcio',league:'Premier League',dateLabel:'Dom',timeLabel:'17:30',home:'Man City',away:'Arsenal',odds:{h:1.95,x:3.60,a:3.80}},{sport:'calcio',league:'La Liga',dateLabel:'Dom',timeLabel:'21:00',home:'Real Madrid',away:'Barcellona',odds:{h:1.90,x:3.50,a:4.00}},{sport:'calcio',league:'Champions League',dateLabel:'Mar',timeLabel:'21:00',home:'Bayern',away:'PSG',odds:{h:2.05,x:3.30,a:3.80}},{sport:'basket',league:'NBA',dateLabel:'Oggi',timeLabel:'02:30',home:'Lakers',away:'Warriors',odds:{h:1.85,x:'',a:1.95}},{sport:'tennis',league:'ATP',dateLabel:'Domani',timeLabel:'14:00',home:'Sinner',away:'Alcaraz',odds:{h:2.10,x:'',a:1.75}},{sport:'mma',league:'UFC',dateLabel:'Sab',timeLabel:'04:00',home:'Topuria',away:'Volkanovski',odds:{h:1.70,x:'',a:2.15}}]; }
+
+function renderMatches(){
+ let container=document.getElementById('matches');
+ let filtered=allMatches.filter(m=>m.sport==currentSport);
+ let leagues=[...new Set(filtered.map(m=>m.league))];
  let html='';
- for(let s of sports){
-  try{
-   const r=await fetch(`/api/odds?sport=${s}`);
-   const d=await r.json();
-   d.slice(0,4).forEach(m=>{
-     const b=m.bookmakers[0]?.markets[0]?.outcomes; if(!b)return;
-     html+=`<div class="card"><small style="color:#d4af37">${m.sport_title}</small><div>${m.home_team} vs ${m.away_team}</div><div class="q">${b.map(o=>`<button onclick="bet('${o.name}',${o.price})">${o.name} ${o.price}</button>`).join('')}</div></div>`;
-   });
-  }catch(e){}
- }
- document.getElementById('list').innerHTML=html; document.getElementById('saldo').innerText=saldo+'€ VIRT';
+ leagues.forEach(l=>{
+  html+=`<div class="league-title">🏆 ${l}</div>`;
+  filtered.filter(m=>m.league==l).forEach(m=>{
+   let gi=allMatches.indexOf(m);
+   html+=`<div class="match-card"><div class="match-top"><span>🕒 ${m.dateLabel} ${m.timeLabel}</span><span>${m.league}</span></div><div class="match-teams"><div class="team">${m.home}</div><div class="vs">vs</div><div class="team" style="text-align:right">${m.away}</div></div><div class="odds"><div class="odd-btn ${isSelected(gi,'1')?'selected':''}" onclick="addPick(${gi},'1','${m.home}',${m.odds.h})">1 ${m.odds.h}</div>${m.odds.x?`<div class="odd-btn ${isSelected(gi,'X')?'selected':''}" onclick="addPick(${gi},'X','Pareggio',${m.odds.x})">X ${m.odds.x}</div>`:`<div></div>`}<div class="odd-btn ${isSelected(gi,'2')?'selected':''}" onclick="addPick(${gi},'2','${m.away}',${m.odds.a})">2 ${m.odds.a}</div></div></div>`;
+  });
+ });
+ container.innerHTML=html;
 }
-function bet(n,p){if(saldo<5)return alert('Saldo finito');saldo-=5;localStorage.setItem('sb_saldo',saldo);document.getElementById('saldo').innerText=saldo+'€ VIRT - '+n+' @'+p;}
-if(user){document.getElementById('login').style.display='none';loadLive();}
-if(location.search.includes('admin') && user?.email!=='sottile1996@gmail.com'){document.body.innerHTML='<h2>Accesso negato</h2>';}
+function isSelected(idx,type){ return slip.find(s=>s.idx==idx && s.type==type); }
+function addPick(idx,type,teamName,odd){ slip=slip.filter(s=>s.idx!==idx); slip.push({idx,type,teamName,odd,match:allMatches[idx].home+' vs '+allMatches[idx].away,league:allMatches[idx].league}); renderMatches(); updateSlip(); }
+function updateSlip(){
+ let c=document.getElementById('slipContent');
+ document.getElementById('count').innerText=slip.length?`(${slip.length})`:'';
+ if(slip.length==0){ c.innerHTML='<div style="opacity:0.5;text-align:center;padding:20px">Seleziona una quota</div>'; document.getElementById('stakeArea').style.display='none'; return; }
+ document.getElementById('stakeArea').style.display='block';
+ let html=''; slip.forEach((s,i)=>{ html+=`<div class="slip-item"><div><b>${s.league}</b><br>${s.match}<br>${s.type} - ${s.teamName}</div><div><b>${s.odd}</b><br><span onclick="removePick(${i})" style="color:#ff5555;cursor:pointer">✕</span></div></div>`; });
+ c.innerHTML=html; updatePotential();
+}
+function removePick(i){ slip.splice(i,1); renderMatches(); updateSlip(); }
+function updatePotential(){ let stake=parseFloat(document.getElementById('stake').value)||5; let total=slip.reduce((a,b)=>a*parseFloat(b.odd),1); document.getElementById('totalOdd').innerText=slip.length?total.toFixed(2):'0'; document.getElementById('potential').innerText=(total*stake).toFixed(2)+' €'; }
+
+function placeBet(){
+ let stake=parseFloat(document.getElementById('stake').value)||5;
+ if(stake>balance){alert('Saldo insufficiente');return;}
+ if(slip.length==0){alert('Seleziona una partita');return;}
+ balance-=stake;
+ localStorage.setItem('balance',balance);
+ document.getElementById('balance').innerText='Saldo: '+balance.toFixed(2)+'€';
+ let total=slip.reduce((a,b)=>a*parseFloat(b.odd),1);
+ let bet={id:Date.now(),date:new Date().toLocaleString('it-IT'),stake,total:total.toFixed(2),potential:(total*stake).toFixed(2),picks:[...slip],status:'live'};
+ myBets.unshift(bet);
+ localStorage.setItem('myBets',JSON.stringify(myBets));
+ localStorage.setItem('balance',balance);
+ slip=[]; updateSlip(); renderMatches(); renderMyBets();
+}
+
+function renderMyBets(){
+ let cont=document.getElementById('myBetsList');
+ if(myBets.length==0){ cont.innerHTML='<div style="opacity:0.5;font-size:13px">Nessuna schedina piazzata</div>'; return; }
+ let html='';
+ myBets.forEach(b=>{
+  let dotClass=b.status=='live'?'gray':b.status=='won'?'green':'red';
+  let label=b.status=='live'?'In corso':b.status=='won'?'Vinta':'Persa';
+  let cls=b.status;
+  html+=`<div class="bet-history ${cls}"><div style="display:flex;justify-content:space-between"><div><span class="dot ${dotClass}"></span><b>${label}</b> - ${b.date}</div><div>${b.stake}€ @${b.total}</div></div><div style="font-size:12px;margin-top:6px">${b.picks.map(p=>`${p.match} - ${p.type} (${p.odd})`).join('<br>')}</div><div style="margin-top:6px;color:#ffcc00">Vincita: ${b.potential}€</div></div>`;
+ });
+ cont.innerHTML=html;
+}
+
+if(localStorage.getItem('slim_user')) startApp();
 </script>
 </body>
 </html>
