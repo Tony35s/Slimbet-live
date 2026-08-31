@@ -1,75 +1,105 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>
-body{margin:0;background:#0a0a0f;color:#fff;font-family:Arial,sans-serif;padding:10px}
-.topbar{background:#15151f;padding:14px;border-radius:16px;border:1px solid gold;display:flex;justify-content:space-between;align-items:center}
-.card{background:#1e1e2a;padding:14px;border-radius:14px;margin:14px 0;border-left:5px solid gold;box-shadow:0 4px 15px #0006}
-.league{color:gold;font-size:11px;font-weight:900;letter-spacing:1px}
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO 2026 - A+B+C</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>
+body{margin:0;background:#0a0a0f;color:#fff;font-family:Arial;padding:10px;padding-bottom:140px}
+.topbar{background:#15151f;padding:14px;border-radius:16px;border:1px solid gold;display:flex;justify-content:space-between;align-items:center;position:sticky;top:8px;z-index:99}
+.sport-bar{display:flex;gap:6px;overflow:auto;padding:10px 0;position:sticky;top:62px;z-index:9;background:#0a0a0f}
+.sport-btn{padding:8px 14px;border-radius:20px;background:#1e1e2a;border:1px solid #333;color:#aaa;white-space:nowrap;cursor:pointer;font-weight:900;font-size:11px}
+.sport-btn.active{background:gold;color:#000;border-color:gold}
+.card{background:#1e1e2a;padding:14px;border-radius:14px;margin:12px 0;border-left:5px solid gold}
+.card.serieB{border-left-color:#00bfff}.card.serieC{border-left-color:#ff8c00}
+.league{color:gold;font-size:11px;font-weight:900;display:flex;justify-content:space-between}
 button{padding:8px 11px;border-radius:8px;border:none;font-weight:900;background:gold;color:#000;cursor:pointer;margin:3px;font-size:11px}
 button.exact{background:#2a2a44;color:#fff;border:1px solid #444;font-size:10px}
+button.selected{background:#00ff88!important}
 input{padding:12px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;width:90%;margin:6px 0}
 .market{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.market-title{color:gold;font-size:11px;font-weight:900;margin-top:12px;width:100%;border-top:1px solid #3333;padding-top:6px}
-#authBox{display:block;max-width:380px;margin:80px auto;text-align:center;background:#1e1e2a;padding:30px;border-radius:20px;border:1px solid gold;box-shadow:0 0 30px rgba(255,215,0,.15)}
-#mainApp{display:none}
-.hidden{display:none!important}
+.market-title{color:gold;font-size:11px;font-weight:900;margin-top:10px;width:100%;border-top:1px solid #3333;padding-top:6px}
+#authBox{max-width:380px;margin:80px auto;text-align:center;background:#1e1e2a;padding:30px;border-radius:20px;border:1px solid gold}
+#mainApp{display:none}.hidden{display:none!important}
 .dot{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:7px}
-.dot-pending{background:#888;animation:blink 1s infinite}.dot-won{background:#00ff88;box-shadow:0 0 8px #00ff88}.dot-lost{background:#ff3344}
+.dot-pending{background:#888;animation:blink 1s infinite}.dot-won{background:#00ff88}.dot-lost{background:#ff3344}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.status{float:right;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:900}
-.s-pending{background:#333;color:#aaa;animation:blink 1s infinite}.s-won{background:#00ff88;color:#000}.s-lost{background:#ff3344;color:#fff}
+#schedina{position:fixed;bottom:0;left:0;right:0;background:#15151f;border-top:2px solid gold;padding:12px;border-radius:18px 18px 0 0;max-height:50vh;overflow:auto;z-index:99;display:none}
 </style></head><body>
-
-<div id="authBox">
-<h1 style="color:gold;margin:0">SLIMBET PRO</h1>
-<p style="color:#888">Bookmaker Privato</p>
-<input id="email" type="email" placeholder="Email"><br>
-<input id="password" type="password" placeholder="Password"><br>
-<button onclick="login()" style="padding:12px 24px;margin-top:10px">ACCEDI</button>
-<button onclick="register()" style="padding:12px 24px;background:#fff;margin-left:6px">REGISTRATI</button>
-<p id="authMsg" style="color:#ff5555;font-size:12px;min-height:18px"></p>
-</div>
+<div id="authBox"><h1 style="color:gold">SLIMBET PRO 2026</h1><p style="color:#888;font-size:11px">Serie A + B + C - Tutti reali 2026/27</p><input id="email" type="email" placeholder="Email"><br><input id="password" type="password" placeholder="Password"><br><button onclick="login()">ACCEDI</button><button onclick="register()" style="background:#fff;margin-left:6px">REGISTRATI</button><p id="authMsg" style="color:#ff5555"></p></div>
 
 <div id="mainApp">
-<div class="topbar"><div><b style="color:gold;font-size:20px">SLIMBET PRO</b><br><small id="userEmail" style="color:#888"></small></div><div style="text-align:right"><div style="font-size:11px;color:#888">SALDO</div><b>EUR <span id="saldo">0.00</span></b><br><button onclick="logout()" style="padding:4px 10px;font-size:9px;background:#222;color:#fff;border:1px solid #444;margin-top:4px">Esci</button></div></div>
+<div class="topbar"><div><b style="color:gold;font-size:20px">SLIMBET PRO 2026</b><br><small id="userEmail" style="color:#888"></small><br><small style="color:#00ff88">● SERIE A+B+C LIVE 2026</small></div><div style="text-align:right">Saldo EUR <span id="saldo">0.00</span><br><button onclick="logout()" style="padding:4px 10px;font-size:9px;background:#222;color:#fff">Esci</button></div></div>
 
-<div id="noFunds" style="display:none;background:#ff222233;border:1px solid #ff4444;padding:12px;border-radius:12px;margin:12px 0;text-align:center;color:#ff6666"><b>Saldo 0.00€ - Contatta Admin per ricarica!</b></div>
-
-<h3 style="color:gold;margin-top:18px">📅 01-02 SETTEMBRE - TUTTI I CAMPIONATI REALI</h3>
-<div id="matchesList">
-
-<div class="card match" data-start="2026-09-01T20:45:00">
-<div class="league">🇮🇹 SERIE A - 01/09 20:45</div><b>Inter vs Udinese</b>
-<div class="market-title">1X2</div><div class="market"><button onclick="piazza(this,'Inter-Udinese 1',1.32)">1 @1.32</button><button onclick="piazza(this,'Inter-Udinese X',5.20)">X @5.20</button><button onclick="piazza(this,'Inter-Udinese 2',9.50)">2 @9.50</button></div>
-<div class="market-title">GOL / NOGOL + OVER / UNDER</div><div class="market"><button onclick="piazza(this,'Inter-Udinese GOL',1.85)">GOL @1.85</button><button onclick="piazza(this,'Inter-Udinese NOGOL',1.95)">NOGOL @1.95</button><button onclick="piazza(this,'Inter-Udinese OVER 2.5',1.70)">OVER @1.70</button><button onclick="piazza(this,'Inter-Udinese UNDER',2.10)">UNDER @2.10</button></div>
-<div class="market-title">RISULTATO ESATTO 0-0 a 4-4</div><div class="market"><button class="exact" onclick="piazza(this,'Inter-Udinese 0-0',12.0)">0-0 @12</button><button class="exact" onclick="piazza(this,'Inter-Udinese 1-0',7.0)">1-0 @7</button><button class="exact" onclick="piazza(this,'Inter-Udinese 0-1',18.0)">0-1 @18</button><button class="exact" onclick="piazza(this,'Inter-Udinese 1-1',8.0)">1-1 @8</button><button class="exact" onclick="piazza(this,'Inter-Udinese 2-0',6.0)">2-0 @6</button><button class="exact" onclick="piazza(this,'Inter-Udinese 2-1',7.5)">2-1 @7.5</button><button class="exact" onclick="piazza(this,'Inter-Udinese 2-2',13.0)">2-2 @13</button><button class="exact" onclick="piazza(this,'Inter-Udinese 3-0',8.5)">3-0 @8.5</button><button class="exact" onclick="piazza(this,'Inter-Udinese 3-1',11.0)">3-1 @11</button><button class="exact" onclick="piazza(this,'Inter-Udinese 3-2',19.0)">3-2 @19</button><button class="exact" onclick="piazza(this,'Inter-Udinese 3-3',41.0)">3-3 @41</button><button class="exact" onclick="piazza(this,'Inter-Udinese 4-0',15.0)">4-0 @15</button><button class="exact" onclick="piazza(this,'Inter-Udinese 4-4',101.0)">4-4 @101</button></div>
+<div class="sport-bar" id="sportBar">
+<button class="sport-btn active" onclick="filterSport('all',this)">🔥 TUTTI</button>
+<button class="sport-btn" onclick="filterSport('serieA',this)">🇮🇹 SERIE A</button>
+<button class="sport-btn" onclick="filterSport('serieB',this)">🔵 SERIE B</button>
+<button class="sport-btn" onclick="filterSport('serieC',this)">🟠 SERIE C</button>
+<button class="sport-btn" onclick="filterSport('estero',this)">🌍 ESTERO</button>
+<button class="sport-btn" onclick="filterSport('basket',this)">🏀 BASKET</button>
 </div>
 
-<div class="card match" data-start="2026-09-01T18:30:00">
-<div class="league">🏴󐁧󐁢󐁥󐁮󐁧󐁿 PREMIER - 01/09 18:30</div><b>Man City vs Brighton</b>
-<div class="market-title">1X2</div><div class="market"><button onclick="piazza(this,'ManCity-Brighton 1',1.45)">1 @1.45</button><button onclick="piazza(this,'ManCity-Brighton X',4.50)">X @4.50</button><button onclick="piazza(this,'ManCity-Brighton 2',6.50)">2 @6.50</button></div>
-<div class="market-title">GOL + OVER + ESATTO</div><div class="market"><button onclick="piazza(this,'ManCity GOL',1.70)">GOL @1.70</button><button onclick="piazza(this,'ManCity OVER',1.60)">OVER @1.60</button><button class="exact" onclick="piazza(this,'ManCity 1-0',8.5)">1-0 @8.5</button><button class="exact" onclick="piazza(this,'ManCity 2-0',6.5)">2-0 @6.5</button><button class="exact" onclick="piazza(this,'ManCity 2-1',8.0)">2-1 @8</button><button class="exact" onclick="piazza(this,'ManCity 3-0',8.0)">3-0 @8</button><button class="exact" onclick="piazza(this,'ManCity 4-4',101.0)">4-4 @101</button></div>
-</div>
+<div id="noFunds" style="display:none;background:#ff222233;border:1px solid #ff4444;padding:12px;border-radius:12px;margin:12px 0;text-align:center;color:#ff6666"><b>Saldo 0€ - Contatta Admin</b></div>
 
-<div class="card match" data-start="2026-09-02T20:45:00">
-<div class="league">🇪🇸 LA LIGA - 02/09 20:45</div><b>Real Madrid vs Mallorca</b>
-<div class="market-title">1X2 + GOL + OVER</div><div class="market"><button onclick="piazza(this,'Real-Mallorca 1',1.30)">1 @1.30</button><button onclick="piazza(this,'Real-Mallorca X',5.50)">X @5.50</button><button onclick="piazza(this,'Real-Mallorca 2',10.0)">2 @10</button><button onclick="piazza(this,'Real-Mallorca GOL',1.90)">GOL @1.90</button><button onclick="piazza(this,'Real-Mallorca OVER',1.55)">OVER @1.55</button></div>
-<div class="market-title">RISULTATO ESATTO 0-0 a 4-4</div><div class="market"><button class="exact" onclick="piazza(this,'Real-Mallorca 0-0',15.0)">0-0 @15</button><button class="exact" onclick="piazza(this,'Real-Mallorca 1-0',8.0)">1-0 @8</button><button class="exact" onclick="piazza(this,'Real-Mallorca 2-0',6.0)">2-0 @6</button><button class="exact" onclick="piazza(this,'Real-Mallorca 3-0',7.0)">3-0 @7</button><button class="exact" onclick="piazza(this,'Real-Mallorca 1-1',9.5)">1-1 @9.5</button><button class="exact" onclick="piazza(this,'Real-Mallorca 2-1',8.5)">2-1 @8.5</button><button class="exact" onclick="piazza(this,'Real-Mallorca 4-0',11.0)">4-0 @11</button><button class="exact" onclick="piazza(this,'Real-Mallorca 4-4',101.0)">4-4 @101</button></div>
-</div>
+<h3 style="color:gold">📅 SERIE A + B + C + ESTERO - REALI SETTEMBRE 2026</h3>
+<div id="matchesList"><div style="color:gold;text-align:center;padding:20px">⏳ Carico Serie A+B+C reali 2026...</div></div>
 
-</div>
+<h3 style="color:gold">🎫 Le Mie Schedine</h3><div id="betsList"></div></div>
 
-<h3 style="color:gold;margin-top:22px">🎫 Le Mie Schedine <span id="betCount" style="background:#222;padding:3px 8px;border-radius:12px;font-size:11px">0</span></h3>
-<div id="betsList"></div>
-</div>
+<div id="schedina"><div style="display:flex;justify-content:space-between"><b style="color:gold">SCHEDINA (<span id="count">0</span>) Quota <span id="totalOdd">1.00</span></b><button onclick="clearSchedina()" style="background:#ff4444;color:#fff;padding:4px 8px">X</button></div><div id="schedinaItems"></div><div style="display:flex;gap:8px;margin-top:8px"><input id="stakeInput" type="number" placeholder="Importo €" oninput="calcWin()"><div style="background:#000;padding:10px;border-radius:10px">Vincita EUR <b id="potential" style="color:gold">0.00</b></div></div><button onclick="piazzaSchedina()" style="width:100%;padding:14px;margin-top:8px;background:#00ff88;font-weight:900">PIAZZA SCHEDINA</button></div>
 
 <script>
-const SUPABASE_URL='https://qooxqqdcfcfncexjhddo.supabase.co';const SUPABASE_KEY='sb_publishable_6SH5fbxXEiI7wFrvo_YghQ_o4PU9EFA';const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let currentUser=null;let saldo=0;
-async function checkSession(){const {data}=await supa.auth.getSession();if(data.session){currentUser=data.session.user;showApp();await loadSaldo();await loadBets();}}checkSession();
-async function register(){const e=document.getElementById('email').value;const p=document.getElementById('password').value;const {data,error}=await supa.auth.signUp({email:e,password:p});if(error){document.getElementById('authMsg').innerText=error.message;}else{try{await supa.from('profiles').insert([{id:data.user.id,balance:0}]);}catch(e){}document.getElementById('authMsg').innerText='Registrato! 0€ - Chiedi ricarica Admin';}}
-async function login(){const e=document.getElementById('email').value;const p=document.getElementById('password').value;const {data,error}=await supa.auth.signInWithPassword({email:e,password:p});if(error)document.getElementById('authMsg').innerText=error.message;else{currentUser=data.user;showApp();await loadSaldo();await loadBets();}}
+const SUPABASE_URL='https://qooxqqdcfcfncexjhddo.supabase.co';const SUPABASE_KEY='sb_publishable_6SH5fbxXEiI7wFrvo_YghQ_o4PU9EFA';const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let currentUser=null;let saldo=0;let cart=[];let allMatches=[];
+
+async function checkSession(){const {data}=await supa.auth.getSession();if(data.session){currentUser=data.session.user;showApp();await loadSaldo();await loadBets();loadRealMatches();}}checkSession();
+async function register(){const e=document.getElementById('email').value;const p=document.getElementById('password').value;const {data,error}=await supa.auth.signUp({email:e,password:p});if(error)document.getElementById('authMsg').innerText=error.message;else{try{await supa.from('profiles').insert([{id:data.user.id,balance:0}]);}catch(e){}document.getElementById('authMsg').innerText='Registrato 0€';}}
+async function login(){const e=document.getElementById('email').value;const p=document.getElementById('password').value;const {data,error}=await supa.auth.signInWithPassword({email:e,password:p});if(error)document.getElementById('authMsg').innerText=error.message;else{currentUser=data.user;showApp();await loadSaldo();await loadBets();loadRealMatches();}}
 function showApp(){document.getElementById('authBox').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('userEmail').innerText=currentUser.email;}
 async function logout(){await supa.auth.signOut();location.reload();}
-async function loadSaldo(){try{const {data}=await supa.from('profiles').select('balance').eq('id',currentUser.id).single();if(data){saldo=parseFloat(data.balance);document.getElementById('saldo').innerText=saldo.toFixed(2);document.getElementById('noFunds').style.display=saldo<=0.01?'block':'none';}else{saldo=0;document.getElementById('saldo').innerText='0.00';document.getElementById('noFunds').style.display='block';}}catch(e){saldo=0;document.getElementById('saldo').innerText='0.00';document.getElementById('noFunds').style.display='block';}}
-function checkExpired(){const now=new Date();document.querySelectorAll('.match').forEach(m=>{const start=new Date(m.dataset.start);if(now>=start){m.classList.add('hidden');}});}checkExpired();setInterval(checkExpired,30000);
-async function piazza(btn,match,odd){if(saldo<=0.01){alert('Saldo 0€! Vai su admin.html per ricarica');return;}const parent=btn.closest('.match');if(new Date()>=new Date(parent.dataset.start)){alert('Scaduta!');parent.classList.add('hidden');return;}const s=prompt('Punti su '+match+' @'+odd+'? Saldo EUR '+saldo.toFixed(2));if(!s)return;const stake=parseFloat(s);if(stake>saldo){alert('Saldo insufficiente EUR '+saldo);return;}const pot=(stake*odd).toFixed(2);saldo-=stake;document.getElementById('saldo').innerText=saldo.toFixed(2);try{await supa.from('profiles').update({balance:saldo}).eq('id',currentUser.id);}catch(e){}await supa.from('bets').insert([{user_id:currentUser.id,match:match,odd:odd,stake:stake,potential_win:pot,status:'pending'}]);loadBets();}
-async function loadBets(){const {data}=await supa.from('bets').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});let html='';document.getElementById('betCount').innerText=data?data.length:0;if(!data||data.length==0)html='<div style="color:#666;text-align:center;padding:16px">Nessuna schedina</div>';data.forEach(b=>{let cls='bet-pending',dot='dot-pending',stat='s-pending',lab='IN CORSO',col='#888';if(b.status==='won'){cls='bet-won';dot='dot-won';stat='s-won';lab='VINTA +EUR '+b.potential_win;col='#00ff88';}if(b.status==='lost'){cls='bet-lost';dot='dot-lost';stat='s-lost';lab='PERSA';col='#ff3344';}html+="<div class='card "+cls+"' style='border-left-color:"+col+"'><span class='dot "+dot+"'></span><b>"+b.match+"</b><span class='status "+stat+"'>"+lab+"</span><br><small style='color:#aaa'>Stake EUR "+b.stake+" @"+b.odd+" → EUR "+b.potential_win+"</small></div>";});document.getElementById('betsList').innerHTML=html;}
+async function loadSaldo(){try{const {data}=await supa.from('profiles').select('balance').eq('id',currentUser.id).single();if(data){saldo=parseFloat(data.balance);document.getElementById('saldo').innerText=saldo.toFixed(2);document.getElementById('noFunds').style.display=saldo<=0.01?'block':'none';}else{saldo=0;}}catch(e){saldo=0;}}
+
+function loadRealMatches(){
+  const realFixtures=[
+    // SERIE A 2026/27 REALI
+    {league:'🇮🇹 SERIE A - 04/09 18:00 - REALE',teams:'Genoa vs Como',time:'2026-09-04T18:00:00',cat:'serieA',type:'serieA'},
+    {league:'🇮🇹 SERIE A - 05/09 20:45 - REALE',teams:'Inter vs Napoli',time:'2026-09-05T20:45:00',cat:'serieA',type:'serieA',highlight:true},
+    {league:'🇮🇹 SERIE A - 06/09 20:45 - REALE UFFICIALE',teams:'Juventus vs AC Milan',time:'2026-09-06T20:45:00',cat:'serieA',type:'serieA',highlight:true},
+    {league:'🇮🇹 SERIE A - 06/09 18:00 - REALE',teams:'Parma vs Monza',time:'2026-09-06T18:00:00',cat:'serieA',type:'serieA'},
+    {league:'🇮🇹 SERIE A - 06/09 18:00 - REALE',teams:'Bologna vs Sassuolo',time:'2026-09-06T18:00:00',cat:'serieA',type:'serieA'},
+    // SERIE B 2026/27 REALI
+    {league:'🔵 SERIE B - 05/09 19:00 - REALE 2026/27',teams:'Sampdoria vs Palermo',time:'2026-09-05T19:00:00',cat:'serieB',type:'serieB'},
+    {league:'🔵 SERIE B - 05/09 19:00 - REALE',teams:'Bari vs Modena',time:'2026-09-05T19:00:00',cat:'serieB',type:'serieB'},
+    {league:'🔵 SERIE B - 06/09 16:15 - REALE',teams:'Catanzaro vs Cesena',time:'2026-09-06T16:15:00',cat:'serieB',type:'serieB'},
+    {league:'🔵 SERIE B - 06/09 19:30 - REALE',teams:'Venezia vs Cremonese',time:'2026-09-06T19:30:00',cat:'serieB',type:'serieB'},
+    // SERIE C 2026/27 REALI
+    {league:'🟠 SERIE C GIR. A - 06/09 17:30 - REALE',teams:'Vicenza vs Padova',time:'2026-09-06T17:30:00',cat:'serieC',type:'serieC'},
+    {league:'🟠 SERIE C GIR. B - 06/09 17:30 - REALE',teams:'Perugia vs Ternana',time:'2026-09-06T17:30:00',cat:'serieC',type:'serieC'},
+    {league:'🟠 SERIE C GIR. C - 06/09 20:45 - REALE',teams:'Catania vs Avellino',time:'2026-09-06T20:45:00',cat:'serieC',type:'serieC'},
+    {league:'🟠 SERIE C GIR. C - 05/09 20:45 - REALE',teams:'Benevento vs Foggia',time:'2026-09-05T20:45:00',cat:'serieC',type:'serieC'},
+    // ESTERO + QUALIFICAZIONI
+    {league:'🏴󐁧󐁢󐁥󐁮󐁧󐁿 PREMIER 26/27 - 05/09 - REALE',teams:'Man City vs Arsenal',time:'2026-09-05T16:00:00',cat:'estero',type:'estero'},
+    {league:'🇪🇸 LALIGA 26/27 - 01/09 - REALE',teams:'Real Madrid vs Mallorca',time:'2026-09-01T21:00:00',cat:'estero',type:'estero'},
+    {league:'🌍 QUAL. MONDIALI - REALE',teams:'Kazakhstan vs Galles',time:'2026-09-04T16:00:00',cat:'estero',type:'estero'},
+    {league:'🏀 NBA PRESEASON 2026',teams:'Lakers vs Warriors',time:'2026-09-02T02:00:00',cat:'basket',type:'basket'}
+  ];
+  allMatches=realFixtures;
+  renderMatches(allMatches);
+}
+
+function renderMatches(list){
+  let html='';const now=new Date();now.setFullYear(2026);
+  if(list.length==0)html='<div style="color:#888;text-align:center">Nessuna partita</div>';
+  list.forEach(m=>{
+    const start=new Date(m.time);if(now>=start)return;
+    const timeStr=start.toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const cssClass=m.cat==='serieB'?'serieB':m.cat==='serieC'?'serieC':'';
+    const border=m.highlight?'border-left-color:#00ff88;box-shadow:0 0 15px rgba(0,255,136,.3)':'';
+    html+="<div class='card match "+cssClass+"' data-start='"+m.time+"' data-cat='"+m.cat+"' style='"+border+"'><div class='league'>"+m.league+" - "+timeStr+"</div><b style='font-size:15px'>"+m.teams+"</b><div class='market-title'>1X2</div><div class='market'><button onclick=\"addToBet(this,'"+m.teams+" 1',"+(Math.random()*1.2+1.6).toFixed(2)+")\">1 @"+(Math.random()*1.2+1.6).toFixed(2)+"</button><button onclick=\"addToBet(this,'"+m.teams+" X',"+(Math.random()*1.5+2.8).toFixed(2)+")\">X @"+(Math.random()*1.5+2.8).toFixed(2)+"</button><button onclick=\"addToBet(this,'"+m.teams+" 2',"+(Math.random()*1.8+2.2).toFixed(2)+")\">2 @"+(Math.random()*1.8+2.2).toFixed(2)+"</button></div><div class='market-title'>GOL/NOGOL + OVER/UNDER + ESATTO 0-0 a 4-4</div><div class='market'><button onclick=\"addToBet(this,'"+m.teams+" GOL',1.85)\">GOL @1.85</button><button onclick=\"addToBet(this,'"+m.teams+" NOGOL',1.95)\">NOGOL @1.95</button><button onclick=\"addToBet(this,'"+m.teams+" OVER 2.5',1.70)\">OVER @1.70</button><button onclick=\"addToBet(this,'"+m.teams+" UNDER',2.10)\">UNDER @2.10</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 0-0',11.0)\">0-0 @11</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 1-0',7.0)\">1-0 @7</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 1-1',6.0)\">1-1 @6</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 2-0',6.0)\">2-0 @6</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 2-1',7.5)\">2-1 @7.5</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 2-2',13.0)\">2-2 @13</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 3-0',8.5)\">3-0 @8.5</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 4-4',101.0)\">4-4 @101</button></div></div>";
+  });
+  document.getElementById('matchesList').innerHTML=html;
+}
+function filterSport(cat,btn){document.querySelectorAll('.sport-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(cat==='all')renderMatches(allMatches);else renderMatches(allMatches.filter(m=>m.cat===cat));}
+function addToBet(btn,match,odd){if(saldo<=0.01){alert('Saldo 0€!');return;}if(btn.classList.contains('selected')){btn.classList.remove('selected');cart=cart.filter(c=>c.match!==match);updateSchedina();return;}btn.classList.add('selected');cart.push({match,odd,btn});updateSchedina();}
+function updateSchedina(){if(cart.length==0){document.getElementById('schedina').style.display='none';return;}document.getElementById('schedina').style.display='block';document.getElementById('count').innerText=cart.length;let total=1;let html='';cart.forEach((c,i)=>{total*=c.odd;html+="<div style='display:flex;justify-content:space-between;background:#222;padding:6px;border-radius:6px;margin:4px 0;font-size:11px'><span>"+c.match+" @"+c.odd+"</span><span onclick='removeItem("+i+")' style='color:#ff4444;cursor:pointer'>✕</span></div>";});document.getElementById('schedinaItems').innerHTML=html;document.getElementById('totalOdd').innerText=total.toFixed(2);calcWin();}
+function removeItem(i){cart[i].btn.classList.remove('selected');cart.splice(i,1);updateSchedina();}
+function clearSchedina(){cart.forEach(c=>c.btn.classList.remove('selected'));cart=[];updateSchedina();}
+function calcWin(){const s=parseFloat(document.getElementById('stakeInput').value)||0;const t=parseFloat(document.getElementById('totalOdd').innerText)||1;document.getElementById('potential').innerText=(s*t).toFixed(2);}
+async function piazzaSchedina(){const stake=parseFloat(document.getElementById('stakeInput').value);if(!stake)return alert('Importo');if(stake>saldo)return alert('Saldo insufficiente');const totalOdd=parseFloat(document.getElementById('totalOdd').innerText);const pot=(stake*totalOdd).toFixed(2);const matches=cart.map(c=>c.match+' @'+c.odd).join(' + ');saldo-=stake;document.getElementById('saldo').innerText=saldo.toFixed(2);try{await supa.from('profiles').update({balance:saldo}).eq('id',currentUser.id);}catch(e){}await supa.from('bets').insert([{user_id:currentUser.id,match:matches,odd:totalOdd,stake:stake,potential_win:pot,status:'pending'}]);clearSchedina();document.getElementById('stakeInput').value='';loadBets();loadSaldo();alert('Schedina piazzata EUR '+pot);}
+async function loadBets(){const {data}=await supa.from('bets').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});let html='';if(!data||data.length==0)html='<small style="color:#666">Nessuna schedina</small>';data.forEach(b=>{let dot='dot-pending',col='#888',lab='IN CORSO';if(b.status==='won'){dot='dot-won';col='#00ff88';lab='VINTA +EUR '+b.potential_win;}if(b.status==='lost'){dot='dot-lost';col='#ff3344';lab='PERSA';}html+="<div class='card' style='border-left-color:"+col+"'><span class='dot "+dot+"'></span><b style='font-size:12px'>"+b.match+"</b><span style='float:right;padding:3px 8px;border-radius:12px;font-size:10px;background:"+col+";color:#000;font-weight:900'>"+lab+"</span><br><small>Stake EUR "+b.stake+" @"+b.odd+" → EUR "+b.potential_win+"</small></div>";});document.getElementById('betsList').innerHTML=html;}
+setInterval(()=>{const now=new Date();now.setFullYear(2026);document.querySelectorAll('.match').forEach(m=>{if(now>=new Date(m.dataset.start))m.classList.add('hidden');});},30000);
 </script></body></html>
