@@ -1,33 +1,94 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>body{background:#0e0e12;color:#fff;font-family:sans-serif;padding:12px;margin:0}.card{background:#1a1a23;padding:14px;border-radius:12px;margin:10px 0;border-left:5px solid #444}.topbar{display:flex;justify-content:space-between;align-items:center;background:#111;padding:12px;border-radius:12px;border:1px solid gold}button{padding:10px 18px;border-radius:8px;border:none;font-weight:900;cursor:pointer;background:gold;color:#000}button:disabled{background:#333!important;color:#777!important}.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px}.dot-won{background:#00ff88}.dot-lost{background:#ff4444}.dot-pending{background:#ffcc00;animation:blink 1s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}.bet-won{border-left-color:#00ff88!important}.bet-lost{border-left-color:#ff4444!important}.bet-pending{border-left-color:#ffcc00!important}.closed{display:none!important}</style></head><body>
-<div class="topbar"><h2 style="color:gold;margin:0">SLIMBET PRO</h2><div>Saldo: EUR <span id="saldo">125.00</span></div></div>
-<h3 style="color:gold;margin-top:18px">OGGI 31 AGO - Partite Reali</h3>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>body{background:#0e0e12;color:#fff;font-family:sans-serif;padding:12px;margin:0}.card{background:#1a1a23;padding:14px;border-radius:12px;margin:10px 0;border-left:5px solid gold}.topbar{background:#111;padding:12px;border-radius:12px;border:1px solid gold;display:flex;justify-content:space-between;align-items:center}button{padding:10px 18px;border-radius:8px;border:none;font-weight:900;background:gold;color:#000;cursor:pointer}input{padding:10px;border-radius:8px;border:1px solid #444;background:#222;color:#fff;width:90%;margin:5px 0}.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}.dot-won{background:#00ff88}.dot-lost{background:#ff4444}.dot-pending{background:#ffcc00;animation:blink 1s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}.bet-won{border-left-color:#00ff88!important}.bet-lost{border-left-color:#ff4444!important}.bet-pending{border-left-color:#ffcc00!important}.closed{display:none!important}#authBox{max-width:350px;margin:40px auto;text-align:center;background:#1a1a23;padding:20px;border-radius:12px;border:1px solid gold}#mainApp{display:none}</style></head><body>
+
+<div id="authBox">
+<h2 style="color:gold">SLIMBET PRO</h2>
+<p>Accedi o Registrati</p>
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<br><button onclick="login()">ACCEDI</button>
+<button onclick="register()" style="background:#fff;margin-left:5px">REGISTRATI</button>
+<p id="authMsg" style="color:#ff4444;font-size:12px"></p>
+</div>
+
+<div id="mainApp">
+<div class="topbar"><h2 style="color:gold;margin:0">SLIMBET PRO</h2><div><span id="userEmail" style="font-size:12px"></span><br>Saldo: EUR <span id="saldo">125.00</span> <button onclick="logout()" style="padding:4px 8px;font-size:10px;margin-left:10px">Esci</button></div></div>
+
+<h3 style="color:gold">OGGI 31 AGO - Partite Vere</h3>
 <div id="matchesList">
-<div class="card match-card" data-start="21:00"><b>Aston Villa vs Arsenal - Premier League</b><br><small>Inizio: 21:00</small><br><button onclick="piazza(this,'Aston Villa vs Arsenal',2.85)">Scommetti @2.85</button></div>
+<div class="card match-card" data-start="21:00"><b>Aston Villa vs Arsenal - Premier</b><br><small>Inizio: 21:00</small><br><button onclick="piazza(this,'Aston Villa vs Arsenal',2.85)">Scommetti @2.85</button></div>
 <div class="card match-card" data-start="21:30"><b>Barcellona vs Rayo Vallecano - LaLiga</b><br><small>Inizio: 21:30</small><br><button onclick="piazza(this,'Barcellona vs Rayo Vallecano',1.35)">Scommetti @1.35</button></div>
 </div>
-<h3 style="color:gold">Le Mie Scommesse</h3>
+
+<h3 style="color:gold">Le Mie Scommesse Salvate</h3>
 <div id="betsList"></div>
+</div>
+
 <script>
 const SUPABASE_URL='https://qooxqqdcfcfncexjhddo.supabase.co';
 const SUPABASE_KEY='sb_publishable_6SH5fbxXEiI7wFrvo_YghQ_o4PU9EFA';
 const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentUser=null;
+
+async function checkSession(){
+  const {data}=await supa.auth.getSession();
+  if(data.session){ currentUser=data.session.user; showApp(); loadBets(); }
+}
+checkSession();
+
+async function register(){
+  const email=document.getElementById('email').value;
+  const pass=document.getElementById('password').value;
+  const {data,error}=await supa.auth.signUp({email,password:pass});
+  if(error){ document.getElementById('authMsg').innerText=error.message; }
+  else{ document.getElementById('authMsg').innerText='Registrato! Controlla email e poi accedi.'; }
+}
+async function login(){
+  const email=document.getElementById('email').value;
+  const pass=document.getElementById('password').value;
+  const {data,error}=await supa.auth.signInWithPassword({email,password:pass});
+  if(error){ document.getElementById('authMsg').innerText=error.message; }
+  else{ currentUser=data.user; showApp(); loadBets(); }
+}
+async function logout(){ await supa.auth.signOut(); location.reload(); }
+function showApp(){
+  document.getElementById('authBox').style.display='none';
+  document.getElementById('mainApp').style.display='block';
+  document.getElementById('userEmail').innerText=currentUser.email;
+}
+
 function checkTime(){
   const now=new Date();
-  document.querySelectorAll('.match-card').forEach(card=>{
-    const t=card.dataset.start; if(!t) return;
-    const parts=t.split(':'); const h=parseInt(parts[0]); const m=parseInt(parts[1]);
-    const start=new Date(); start.setHours(h,m,0,0);
-    if(now>=start){ card.classList.add('closed'); }
+  document.querySelectorAll('.match-card').forEach(c=>{
+    const t=c.dataset.start.split(':');
+    const s=new Date(); s.setHours(parseInt(t[0]),parseInt(t[1]),0,0);
+    if(now>=s) c.classList.add('closed');
   });
 }
-setInterval(checkTime,10000); checkTime();
-function piazza(btn,match,odd){
-  const card=btn.closest('.match-card');
-  const t=card.dataset.start.split(':'); const start=new Date(); start.setHours(parseInt(t[0]),parseInt(t[1]),0,0);
-  if(new Date()>=start){ alert("Chiusa alle "+card.dataset.start); card.classList.add('closed'); return; }
-  const stake=prompt("Quanto punti su "+match+" @"+odd+"?");
-  if(!stake) return;
+setInterval(checkTime,5000); checkTime();
+
+async function piazza(btn,match,odd){
+  const c=btn.closest('.match-card');
+  const t=c.dataset.start.split(':');
+  const s=new Date(); s.setHours(parseInt(t[0]),parseInt(t[1]),0,0);
+  if(new Date()>=s){ alert('Chiusa alle '+c.dataset.start); c.classList.add('closed'); return; }
+  const stake=prompt('Quanto punti su '+match+' @'+odd+'?'); if(!stake) return;
   const pot=(parseFloat(stake)*odd).toFixed(2);
-  document.getElementById('betsList').innerHTML="<div class='card bet-pending'><span class='dot dot-pending'></span><b>"+match+"</b><br><small>Stake EUR "+stake+" @"+odd+" - Vincita EUR "+pot+"</small></div>"+document.getElementById('betsList').innerHTML;
+  const {data,error}=await supa.from('bets').insert([{user_id:currentUser.id,match:match,odd:odd,stake:stake,potential_win:pot,status:'pending'}]);
+  if(error){ alert(error.message); } else { loadBets(); }
 }
-</script></body></html>
+
+async function loadBets(){
+  const {data,error}=await supa.from('bets').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+  if(error){ console.log(error); return; }
+  let html='';
+  data.forEach(b=>{
+    let cls='bet-pending'; let dot='dot-pending'; let label='IN CORSO';
+    if(b.status==='won'){ cls='bet-won'; dot='dot-won'; label='VINTA'; }
+    if(b.status==='lost'){ cls='bet-lost'; dot='dot-lost'; label='PERSA'; }
+    html+="<div class='card "+cls+"'><span class='dot "+dot+"'></span><b>"+b.match+"</b><small style='float:right'>"+label+"</small><br><small>Stake EUR "+b.stake+" @"+b.odd+" - Vincita EUR "+b.potential_win+"</small></div>";
+  });
+  document.getElementById('betsList').innerHTML=html;
+}
+</script>
+</body>
+</html>
