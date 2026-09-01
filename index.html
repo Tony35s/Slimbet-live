@@ -1,96 +1,18 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ADMIN - SLIMBET PRO</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>
-body{background:#0a0a0f;color:#fff;font-family:Arial;padding:14px}
-.top{ background:#15151f;padding:14px;border-radius:14px;border:1px solid gold;display:flex;justify-content:space-between;align-items:center }
-input{padding:10px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;margin:4px}
-.card{background:#1e1e2a;padding:14px;border-radius:14px;margin:10px 0;border-left:4px solid gold}
-button{padding:10px 14px;border-radius:10px;border:none;font-weight:900;cursor:pointer;margin:3px}
-.won{background:#00ff88;color:#000}.lost{background:#ff3344;color:#fff}.charge{background:gold;color:#000}
-#adminPanel{display:none}
-#loginPanel{max-width:380px;margin:80px auto;text-align:center;background:#1e1e2a;padding:30px;border-radius:20px;border:1px solid gold}
-.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
-.dot-pending{background:#888;animation:blink 1s infinite}.dot-won{background:#00ff88}.dot-lost{background:#ff3344}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-</style></head><body>
+<!-- AGGIORNAMENTO 1 SETTEMBRE 2026 - PARTITE REALI -->
+<div class="card match-card"><b>🇩🇪 HEBC Hamburg vs Borussia Dortmund - DFB Pokal</b><br><small>20:45</small><br><button onclick="piazza(this,'HEBC Hamburg vs Dortmund',12.00)">1 @12.00</button> <button onclick="piazza(this,'Pareggio Hamburg Dortmund',7.50)">X @7.50</button> <button onclick="piazza(this,'Dortmund vs HEBC Hamburg',1.08)">2 @1.08</button></div>
 
-<div id="loginPanel">
-<h1 style="color:gold;margin:0">ADMIN PANEL</h1><p style="color:#888;font-size:12px">SLIMBET PRO - Gestione</p>
-<input id="email" type="email" placeholder="Email Admin"><br>
-<input id="pass" type="password" placeholder="Password"><br>
-<button onclick="login()" style="background:gold;padding:12px 24px;margin-top:10px">ENTRA ADMIN</button>
-<p id="msg" style="color:#ff5555;font-size:12px"></p>
-</div>
+<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Lincoln City vs Blackburn Rovers - Championship</b><br><small>20:45</small><br><button onclick="piazza(this,'Lincoln vs Blackburn',2.80)">1 @2.80</button> <button onclick="piazza(this,'Pareggio Lincoln Blackburn',3.20)">X @3.20</button> <button onclick="piazza(this,'Blackburn vs Lincoln',2.45)">2 @2.45</button></div>
 
-<div id="adminPanel">
-<div class="top"><div><b style="color:gold;font-size:20px">👑 ADMIN - SLIMBET PRO</b><br><small style="color:#888">Live - Auto aggiornato</small><br><small id="adminEmail" style="color:#aaa"></small></div><button onclick="logout()" style="background:#222;color:#fff;border:1px solid #444">Esci</button></div>
+<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Stoke City vs Norwich City - Championship</b><br><small>21:00</small><br><button onclick="piazza(this,'Stoke vs Norwich',2.40)">1 @2.40</button> <button onclick="piazza(this,'Pareggio Stoke Norwich',3.30)">X @3.30</button> <button onclick="piazza(this,'Norwich vs Stoke',2.85)">2 @2.85</button></div>
 
-<h3 style="color:gold;margin-top:18px">💳 UTENTI - RICARICA / ELIMINA</h3>
-<input id="searchUser" placeholder="🔍 Cerca email..." oninput="filterUsers()" style="width:95%;margin-bottom:10px">
-<div id="users"></div>
+<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Chesterfield vs Gillingham - League Two</b><br><small>20:45</small><br><button onclick="piazza(this,'Chesterfield vs Gillingham',2.10)">1 @2.10</button> <button onclick="piazza(this,'Pareggio Chesterfield Gillingham',3.40)">X @3.40</button> <button onclick="piazza(this,'Gillingham vs Chesterfield',3.20)">2 @3.20</button></div>
 
-<hr style="border-color:#333;margin:20px 0">
+<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Walsall vs Crewe Alexandra - League Two</b><br><small>20:45</small><br><button onclick="piazza(this,'Walsall vs Crewe',2.25)">1 @2.25</button> <button onclick="piazza(this,'Pareggio Walsall Crewe',3.30)">X @3.30</button> <button onclick="piazza(this,'Crewe vs Walsall',3.00)">2 @3.00</button></div>
 
-<h3 style="color:gold">🎫 SCHEDINE - GESTIONE VINCITE</h3>
-<div id="list"></div>
-</div>
+<div class="card match-card"><b>🎾 Flavio Cobolli vs Francisco Comesana - US Open</b><br><small>17:00 - Arthur Ashe</small><br><button onclick="piazza(this,'Cobolli vs Comesana',1.65)">Cobolli @1.65</button> <button onclick="piazza(this,'Comesana vs Cobolli',2.20)">Comesana @2.20</button></div>
 
-<script>
-const SUPABASE_URL='https://qooxqqdcfcfncexjhddo.supabase.co';
-const SUPABASE_KEY='sb_publishable_6SH5fbxXEiI7wFrvo_YghQ_o4PU9EFA';
-const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let allUsers=[], userMap={};
+<div class="card match-card"><b>🎾 Taylor Fritz vs Darwin Blanch - US Open</b><br><small>18:40</small><br><button onclick="piazza(this,'Fritz vs Blanch',1.07)">Fritz @1.07</button> <button onclick="piazza(this,'Blanch vs Fritz',8.50)">Blanch @8.50</button></div>
 
-async function checkSession(){const {data}=await supa.auth.getSession();if(data.session){document.getElementById('loginPanel').style.display='none';document.getElementById('adminPanel').style.display='block';document.getElementById('adminEmail').innerText=data.session.user.email;loadUsers();}}
-checkSession();
+<div class="card match-card"><b>🎾 Mirra Andreeva vs Janice Tjen - US Open Donne</b><br><small>18:40</small><br><button onclick="piazza(this,'Andreeva vs Tjen',1.18)">Andreeva @1.18</button> <button onclick="piazza(this,'Tjen vs Andreeva',4.80)">Tjen @4.80</button></div>
 
-async function login(){
-  const e=document.getElementById('email').value;
-  const p=document.getElementById('pass').value;
-  const {data,error}=await supa.auth.signInWithPassword({email:e,password:p});
-  if(error){document.getElementById('msg').innerText=error.message;}
-  else{ document.getElementById('loginPanel').style.display='none';document.getElementById('adminPanel').style.display='block';document.getElementById('adminEmail').innerText=data.user.email;loadUsers(); }
-}
-async function logout(){await supa.auth.signOut();location.reload();}
-
-async function loadUsers(){
-  const {data,error}=await supa.from('profiles').select('*').order('balance',{ascending:false});
-  if(error){document.getElementById('users').innerHTML='Errore: '+error.message;return;}
-  allUsers=data||[]; userMap={}; allUsers.forEach(u=>{userMap[u.id]=u.email||u.id.substring(0,8)});
-  renderUsers(allUsers); loadBets();
-}
-function renderUsers(list){
-  let h='';if(list.length==0)h='<small style="color:#888">Nessun utente</small>';
-  list.forEach(u=>{
-    h+="<div class='card'><b style='color:gold;font-size:16px'>"+(u.email||'Senza email')+"</b><br><small style='color:#888'>ID: "+u.id.substring(0,8)+"...</small><br><b>Saldo: EUR "+parseFloat(u.balance||0).toFixed(2)+"</b><br><div style='margin-top:10px'><input id='amt_"+u.id+"' type='number' placeholder='Importo €'><button class='charge' onclick=\"ricarica('"+u.id+"')\">+ RICARICA</button><button class='charge' style='background:#fff' onclick=\"setSaldo('"+u.id+"')\">IMPOSTA SALDO</button><button class='lost' onclick=\"eliminaUtente('"+u.id+"','"+(u.email||u.id)+"')\">🗑️ ELIMINA</button></div></div>";
-  });
-  document.getElementById('users').innerHTML=h;
-}
-function filterUsers(){ const q=document.getElementById('searchUser').value.toLowerCase(); renderUsers(allUsers.filter(u=>(u.email||'').toLowerCase().includes(q))); }
-
-async function ricarica(uid){ const amt=parseFloat(document.getElementById('amt_'+uid).value); if(!amt||amt<=0)return alert('Importo?'); const {data}=await supa.from('profiles').select('balance').eq('id',uid).single(); const nuovo=parseFloat(data.balance)+amt; await supa.from('profiles').update({balance:nuovo}).eq('id',uid); alert('✅ + EUR '+amt+' - Nuovo EUR '+nuovo.toFixed(2)); loadUsers(); }
-async function setSaldo(uid){ const amt=parseFloat(document.getElementById('amt_'+uid).value); if(isNaN(amt))return alert('Importo'); await supa.from('profiles').update({balance:amt}).eq('id',uid); alert('Impostato EUR '+amt.toFixed(2)); loadUsers(); }
-
-async function eliminaUtente(uid,email){
-  if(!confirm('⚠️ ELIMINARE DEFINITIVAMENTE?\n\n'+email+'\n\nVerranno cancellati saldo e schedine!')) return;
-  if(!confirm('ULTIMA CONFERMA: Elimino '+email+'?')) return;
-  await supa.from('bets').delete().eq('user_id',uid);
-  const {error}=await supa.from('profiles').delete().eq('id',uid);
-  if(error){ alert('Errore: '+error.message); return; }
-  alert('🗑️ Eliminato '+email+' da profili e schedine.\n\nIMPORTANTE: Vai ora su Supabase → Authentication → Users e cancellalo anche lì per togliergli il login.');
-  loadUsers();
-}
-
-async function loadBets(){
-  const {data}=await supa.from('bets').select('*').order('created_at',{ascending:false}).limit(150);
-  let h='';if(!data||data.length==0)h='<small style="color:#888">Nessuna schedina</small>';
-  data.forEach(b=>{
-    let dot='dot-pending',col='#888'; if(b.status==='won'){dot='dot-won';col='#00ff88';} if(b.status==='lost'){dot='dot-lost';col='#ff3344';}
-    const emailUtente=userMap[b.user_id]||b.user_id.substring(0,8);
-    h+="<div class='card' style='border-left-color:"+col+"'><span class='dot "+dot+"'></span><b>"+b.match+"</b><br><small style='color:gold'>👤 "+emailUtente+"</small> | <small>Stake EUR "+b.stake+" @"+b.odd+" → Vincita EUR "+b.potential_win+"</small><br>Stato: <b style='color:"+col+"'>"+b.status.toUpperCase()+"</b><br><div style='margin-top:8px'><button class='won' onclick=\"setStatus('"+b.id+"','"+b.user_id+"',"+b.potential_win+",'won')\">✅ VINTA + EUR "+b.potential_win+"</button><button class='lost' onclick=\"setStatus('"+b.id+"','"+b.user_id+"',0,'lost')\">❌ PERSA</button></div></div>";
-  });
-  document.getElementById('list').innerHTML=h;
-}
-async function setStatus(betId,userId,vincita,stato){
-  if(stato==='won'){ const {data:prof}=await supa.from('profiles').select('balance').eq('id',userId).single(); let nuovo=prof?parseFloat(prof.balance)+parseFloat(vincita):parseFloat(vincita); await supa.from('profiles').update({balance:nuovo}).eq('id',userId); alert('💰 Accredito EUR '+vincita+' a '+(userMap[userId]||userId)); }
-  await supa.from('bets').update({status:stato}).eq('id',betId); loadBets(); loadUsers();
-}
-</script></body></html>
+<div class="card match-card"><b>🎾 Francisco Cerundolo vs Misolic - US Open</b><br><small>17:00</small><br><button onclick="piazza(this,'Cerundolo vs Misolic',1.35)">Cerundolo @1.35</button> <button onclick="piazza(this,'Misolic vs Cerundolo',3.10)">Misolic @3.10</button></div>
