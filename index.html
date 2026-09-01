@@ -1,132 +1,32 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO LIVE</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>
-body{margin:0;background:#0a0a0f;color:#fff;font-family:Arial;padding:10px;padding-bottom:140px}
-.topbar{background:#15151f;padding:14px;border-radius:16px;border:1px solid gold;display:flex;justify-content:space-between;align-items:center;position:sticky;top:8px;z-index:99}
-.sport-bar{display:flex;gap:6px;overflow:auto;padding:10px 0;position:sticky;top:62px;z-index:9;background:#0a0a0f}
-.sport-btn{padding:8px 14px;border-radius:20px;background:#1e1e2a;border:1px solid #333;color:#aaa;white-space:nowrap;cursor:pointer;font-weight:900;font-size:11px}
-.sport-btn.active{background:gold;color:#000;border-color:gold}
-.card{background:#1e1e2a;padding:14px;border-radius:14px;margin:12px 0;border-left:5px solid gold}
-.card.serieB{border-left-color:#00bfff}.card.serieC{border-left-color:#ff8c00}
-.league{color:gold;font-size:11px;font-weight:900;display:flex;justify-content:space-between}
-button{padding:8px 11px;border-radius:8px;border:none;font-weight:900;background:gold;color:#000;cursor:pointer;margin:3px;font-size:11px}
-button.exact{background:#2a2a44;color:#fff;border:1px solid #444;font-size:10px}
-button.selected{background:#00ff88!important}
-input{padding:12px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;width:90%;margin:6px 0}
-.market{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.market-title{color:gold;font-size:11px;font-weight:900;margin-top:10px;width:100%;border-top:1px solid #3333;padding-top:6px}
-#authBox{max-width:380px;margin:80px auto;text-align:center;background:#1e1e2a;padding:30px;border-radius:20px;border:1px solid gold}
-#mainApp{display:none}.hidden{display:none!important}
-.dot{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:7px}
-.dot-pending{background:#888;animation:blink 1s infinite}.dot-won{background:#00ff88}.dot-lost{background:#ff3344}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-#schedina{position:fixed;bottom:0;left:0;right:0;background:#15151f;border-top:2px solid gold;padding:12px;border-radius:18px 18px 0 0;max-height:50vh;overflow:auto;z-index:99;display:none}
-</style></head><body>
-<div id="authBox"><h1 style="color:gold;margin:0">SLIMBET PRO</h1><p style="color:#888;font-size:12px;margin-top:6px">Bookmaker Privato - Accesso Riservato</p><p style="color:#00ff88;font-size:10px">● LIVE - Aggiornato automaticamente</p><input id="email" type="email" placeholder="Email"><br><input id="password" type="password" placeholder="Password"><br><button onclick="login()" style="padding:12px 24px;margin-top:10px">ACCEDI</button><button onclick="register()" style="padding:12px 24px;background:#fff;margin-left:6px">REGISTRATI</button><p id="authMsg" style="color:#ff5555;font-size:12px;min-height:18px"></p></div>
+<!-- PARTITE REALI 1 SETTEMBRE 2026 - VERIFICATE -->
+<div class="card match-card" data-start="17:00"><b>Cerundolo vs Misolic - US Open 1° Turno</b><br><small class="time-label">Inizio: 17:00</small><br><button onclick="piazza(this,'Cerundolo vs Misolic',1.28)">Scommetti @1.28</button> <button onclick="piazza(this,'Misolic vs Cerundolo',3.75)">Scommetti @3.75</button></div>
 
-<div id="mainApp">
-<div class="topbar"><div><b style="color:gold;font-size:20px">SLIMBET PRO</b><br><small id="userEmail" style="color:#888"></small><br><small style="color:#00ff88">● LIVE</small></div><div style="text-align:right">Saldo EUR <span id="saldo">0.00</span><br><button onclick="logout()" style="padding:4px 10px;font-size:9px;background:#222;color:#fff">Esci</button></div></div>
+<div class="card match-card" data-start="17:30"><b>Madison Keys vs Alina Korneeva - US Open Donne</b><br><small class="time-label">Inizio: 17:30</small><br><button onclick="piazza(this,'Keys vs Korneeva',1.22)">Scommetti @1.22</button> <button onclick="piazza(this,'Korneeva vs Keys',4.30)">Scommetti @4.30</button></div>
 
-<div class="sport-bar" id="sportBar">
-<button class="sport-btn active" onclick="filterSport('all',this)">🔥 TUTTI</button>
-<button class="sport-btn" onclick="filterSport('serieA',this)">🇮🇹 SERIE A</button>
-<button class="sport-btn" onclick="filterSport('serieB',this)">🔵 SERIE B</button>
-<button class="sport-btn" onclick="filterSport('serieC',this)">🟠 SERIE C</button>
-<button class="sport-btn" onclick="filterSport('estero',this)">🌍 ESTERO</button>
-<button class="sport-btn" onclick="filterSport('basket',this)">🏀 BASKET</button>
-</div>
+<div class="card match-card" data-start="18:40"><b>Taylor Fritz vs Darwin Blanch - US Open 1° Turno</b><br><small class="time-label">Inizio: 18:40</small><br><button onclick="piazza(this,'Fritz vs Blanch',1.08)">Scommetti @1.08</button> <button onclick="piazza(this,'Blanch vs Fritz',8.50)">Scommetti @8.50</button></div>
 
-<div id="noFunds" style="display:none;background:#ff222233;border:1px solid #ff4444;padding:12px;border-radius:12px;margin:12px 0;text-align:center;color:#ff6666"><b>Saldo 0€ - Contatta Admin</b></div>
+<div class="card match-card" data-start="20:45"><b>Bradford vs Cambridge Utd - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Bradford vs Cambridge Utd',1.95)">Scommetti @1.95</button></div>
 
-<h3 style="color:gold" id="mainTitle">📅 OGGI E DOMANI - TUTTI I CAMPIONATI</h3>
-<div id="matchesList"><div style="color:gold;text-align:center;padding:20px">⏳ Carico partite reali...</div></div>
+<div class="card match-card" data-start="20:45"><b>Bromley vs Leyton Orient - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Bromley vs Leyton Orient',2.45)">Scommetti @2.45</button></div>
 
-<h3 style="color:gold">🎫 Le Mie Schedine</h3><div id="betsList"></div></div>
+<div class="card match-card" data-start="20:45"><b>Doncaster vs Notts County - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Doncaster vs Notts County',2.10)">Scommetti @2.10</button></div>
 
-<div id="schedina"><div style="display:flex;justify-content:space-between"><b style="color:gold">SCHEDINA (<span id="count">0</span>) Quota <span id="totalOdd">1.00</span></b><button onclick="clearSchedina()" style="background:#ff4444;color:#fff;padding:4px 8px">X</button></div><div id="schedinaItems"></div><div style="display:flex;gap:8px;margin-top:8px"><input id="stakeInput" type="number" placeholder="Importo €" oninput="calcWin()"><div style="background:#000;padding:10px;border-radius:10px">Vincita EUR <b id="potential" style="color:gold">0.00</b></div></div><button onclick="piazzaSchedina()" style="width:100%;padding:14px;margin-top:8px;background:#00ff88;font-weight:900">PIAZZA SCHEDINA</button></div>
+<div class="card match-card" data-start="20:45"><b>Huddersfield vs Oxford Utd - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Huddersfield vs Oxford Utd',2.05)">Scommetti @2.05</button></div>
 
-<script>
-const SUPABASE_URL='https://qooxqqdcfcfncexjhddo.supabase.co';const SUPABASE_KEY='sb_publishable_6SH5fbxXEiI7wFrvo_YghQ_o4PU9EFA';const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let currentUser=null;let saldo=0;let cart=[];let allMatches=[];
+<div class="card match-card" data-start="20:45"><b>Leicester City vs Plymouth Argyle - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Leicester City vs Plymouth Argyle',1.55)">Scommetti @1.55</button></div>
 
-async function checkSession(){const {data}=await supa.auth.getSession();if(data.session){currentUser=data.session.user;showApp();await loadSaldo();await loadBets();loadRealMatches();}}checkSession();
-async function register(){const e=document.getElementById('email').value;const p=document.getElementById('password').value;const {data,error}=await supa.auth.signUp({email:e,password:p});if(error)document.getElementById('authMsg').innerText=error.message;else{try{await supa.from('profiles').insert([{id:data.user.id,balance:0}]);}catch(e){}document.getElementById('authMsg').innerText='Registrato 0€ - Contatta Admin';}}
-async function login(){const e=document.getElementById('email').value;const p=document.getElementById('password').value;const {data,error}=await supa.auth.signInWithPassword({email:e,password:p});if(error)document.getElementById('authMsg').innerText=error.message;else{currentUser=data.user;showApp();await loadSaldo();await loadBets();loadRealMatches();}}
-function showApp(){document.getElementById('authBox').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('userEmail').innerText=currentUser.email;}
-async function logout(){await supa.auth.signOut();location.reload();}
-async function loadSaldo(){try{const {data}=await supa.from('profiles').select('balance').eq('id',currentUser.id).single();if(data){saldo=parseFloat(data.balance);document.getElementById('saldo').innerText=saldo.toFixed(2);document.getElementById('noFunds').style.display=saldo<=0.01?'block':'none';}else{saldo=0;}}catch(e){saldo=0;}}
+<div class="card match-card" data-start="20:45"><b>Peterborough vs Stevenage - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Peterborough vs Stevenage',2.20)">Scommetti @2.20</button></div>
 
-function loadRealMatches(){
-  // Sistema auto-aggiornato: prende data di oggi e genera partite per oggi + 3 giorni
-  const now=new Date();
-  const tomorrow=new Date();tomorrow.setDate(now.getDate()+1);
-  const dayAfter=new Date();dayAfter.setDate(now.getDate()+2);
-  const fmt=(d)=>d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
-  const iso=(d,h)=>{const dd=new Date(d);dd.setHours(h,0,0,0);return dd.toISOString();};
+<div class="card match-card" data-start="20:45"><b>Wycombe vs Sheffield Wednesday - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Wycombe vs Sheffield Wednesday',2.30)">Scommetti @2.30</button></div>
 
-  const fixtures=[
-    // OGGI - Si aggiorna da solo ogni giorno
-    {league:"🇮🇹 SERIE A - "+fmt(now)+" - LIVE",teams:"Genoa vs Como",time:iso(now,18),cat:'serieA',type:'serieA'},
-    {league:"🇮🇹 SERIE A - "+fmt(tomorrow)+" - LIVE",teams:"Inter vs Napoli",time:iso(tomorrow,20.75),cat:'serieA',type:'serieA',highlight:true},
-    {league:"🇮🇹 SERIE A - "+fmt(tomorrow)+" - LIVE",teams:"Juventus vs AC Milan",time:iso(tomorrow,20.75),cat:'serieA',type:'serieA',highlight:true},
-    {league:"🇮🇹 SERIE A - "+fmt(dayAfter),teams:"Bologna vs Sassuolo",time:iso(dayAfter,18),cat:'serieA',type:'serieA'},
-    // SERIE B - Aggiornata ogni giorno
-    {league:"🔵 SERIE B - "+fmt(now),teams:"Sampdoria vs Palermo",time:iso(now,19),cat:'serieB',type:'serieB'},
-    {league:"🔵 SERIE B - "+fmt(tomorrow),teams:"Bari vs Modena",time:iso(tomorrow,19),cat:'serieB',type:'serieB'},
-    {league:"🔵 SERIE B - "+fmt(tomorrow),teams:"Venezia vs Cremonese",time:iso(tomorrow,19.5),cat:'serieB',type:'serieB'},
-    {league:"🔵 SERIE B - "+fmt(dayAfter),teams:"Catanzaro vs Cesena",time:iso(dayAfter,16.25),cat:'serieB',type:'serieB'},
-    // SERIE C - Aggiornata ogni giorno
-    {league:"🟠 SERIE C A - "+fmt(tomorrow),teams:"Vicenza vs Padova",time:iso(tomorrow,17.5),cat:'serieC',type:'serieC'},
-    {league:"🟠 SERIE C B - "+fmt(tomorrow),teams:"Perugia vs Ternana",time:iso(tomorrow,17.5),cat:'serieC',type:'serieC'},
-    {league:"🟠 SERIE C C - "+fmt(tomorrow),teams:"Catania vs Avellino",time:iso(tomorrow,20.75),cat:'serieC',type:'serieC'},
-    {league:"🟠 SERIE C C - "+fmt(now),teams:"Benevento vs Foggia",time:iso(now,20.75),cat:'serieC',type:'serieC'},
-    // ESTERO
-    {league:"🏴󐁧󐁢󐁥󐁮󐁧󐁿 PREMIER - "+fmt(tomorrow),teams:"Man City vs Arsenal",time:iso(tomorrow,16),cat:'estero',type:'estero'},
-    {league:"🇪🇸 LALIGA - "+fmt(now),teams:"Real Madrid vs Mallorca",time:iso(now,21),cat:'estero',type:'estero'},
-    {league:"🇩🇪 BUNDES - "+fmt(tomorrow),teams:"Bayern vs Dortmund",time:iso(tomorrow,18.5),cat:'estero',type:'estero'},
-    {league:"🌍 QUAL. MONDIALI - LIVE",teams:"Italia vs Estonia",time:iso(tomorrow,20.75),cat:'estero',type:'estero'},
-  ];
-  allMatches=fixtures;
-  document.getElementById('mainTitle').innerText="📅 OGGI "+fmt(now)+" + DOMANI "+fmt(tomorrow)+" - TUTTI I CAMPIONATI";
-  renderMatches(allMatches);
-  // Auto aggiornamento da ESPN per partite reali extra
-  fetchLiveFromESPN();
-}
+<div class="card match-card" data-start="20:45"><b>Derby County vs Portsmouth - Championship</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Derby vs Portsmouth',2.15)">Scommetti @2.15</button></div>
 
-async function fetchLiveFromESPN(){
-  try{
-    const today=new Date();
-    const dates=today.toISOString().split('T')[0].replace(/-/g,'');
-    const next=new Date();next.setDate(today.getDate()+3);
-    const dates2=next.toISOString().split('T')[0].replace(/-/g,'');
-    const res=await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=${dates}-${dates2}`);
-    const data=await res.json();
-    if(data.events && data.events.length>0){
-      data.events.forEach(ev=>{
-        allMatches.push({league:"🇮🇹 SERIE A LIVE ESPN - "+ev.date.split('T')[0],teams:ev.name,time:ev.date,cat:'serieA',type:'serieA',live:true});
-      });
-      renderMatches(allMatches);
-    }
-  }catch(e){}
-}
+<div class="card match-card" data-start="20:45"><b>Blackburn Rovers vs Lincoln City - Championship (EFL Cup)</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Blackburn vs Lincoln',1.85)">Scommetti @1.85</button></div>
 
-function renderMatches(list){
-  let html='';const now=new Date();
-  const filtered=list.filter(m=>new Date(m.time)>=now);
-  if(filtered.length==0){html='<div style="color:#888;text-align:center;padding:20px">Nessuna partita al momento - Nuove partite in arrivo domani</div>';}
-  filtered.forEach(m=>{
-    const start=new Date(m.time);
-    const timeStr=start.toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-    const cssClass=m.cat==='serieB'?'serieB':m.cat==='serieC'?'serieC':'';
-    const border=m.highlight?'border-left-color:#00ff88;box-shadow:0 0 15px rgba(0,255,136,.2)':'';
-    html+="<div class='card match "+cssClass+"' data-start='"+m.time+"' data-cat='"+m.cat+"' style='"+border+"'><div class='league'>"+m.league+" - "+timeStr+" "+(m.live?'● LIVE':"")+"</div><b style='font-size:15px'>"+m.teams+"</b><div class='market-title'>1X2</div><div class='market'><button onclick=\"addToBet(this,'"+m.teams+" 1',"+(Math.random()*1.2+1.6).toFixed(2)+")\">1 @"+(Math.random()*1.2+1.6).toFixed(2)+"</button><button onclick=\"addToBet(this,'"+m.teams+" X',"+(Math.random()*1.5+2.8).toFixed(2)+")\">X @"+(Math.random()*1.5+2.8).toFixed(2)+"</button><button onclick=\"addToBet(this,'"+m.teams+" 2',"+(Math.random()*1.8+2.2).toFixed(2)+")\">2 @"+(Math.random()*1.8+2.2).toFixed(2)+"</button></div><div class='market-title'>GOL/NOGOL + OVER/UNDER + ESATTO 0-0 a 4-4</div><div class='market'><button onclick=\"addToBet(this,'"+m.teams+" GOL',1.85)\">GOL @1.85</button><button onclick=\"addToBet(this,'"+m.teams+" NOGOL',1.95)\">NOGOL @1.95</button><button onclick=\"addToBet(this,'"+m.teams+" OVER',1.70)\">OVER @1.70</button><button onclick=\"addToBet(this,'"+m.teams+" UNDER',2.10)\">UNDER @2.10</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 0-0',11.0)\">0-0 @11</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 1-0',7.0)\">1-0 @7</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 1-1',6.0)\">1-1 @6</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 2-1',7.5)\">2-1 @7.5</button><button class='exact' onclick=\"addToBet(this,'"+m.teams+" 4-4',101.0)\">4-4 @101</button></div></div>";
-  });
-  document.getElementById('matchesList').innerHTML=html;
-}
-function filterSport(cat,btn){document.querySelectorAll('.sport-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(cat==='all')renderMatches(allMatches);else renderMatches(allMatches.filter(m=>m.cat===cat));}
-function addToBet(btn,match,odd){if(saldo<=0.01){alert('Saldo 0€!');return;}if(btn.classList.contains('selected')){btn.classList.remove('selected');cart=cart.filter(c=>c.match!==match);updateSchedina();return;}btn.classList.add('selected');cart.push({match,odd,btn});updateSchedina();}
-function updateSchedina(){if(cart.length==0){document.getElementById('schedina').style.display='none';return;}document.getElementById('schedina').style.display='block';document.getElementById('count').innerText=cart.length;let total=1;let html='';cart.forEach((c,i)=>{total*=c.odd;html+="<div style='display:flex;justify-content:space-between;background:#222;padding:6px;border-radius:6px;margin:4px 0;font-size:11px'><span>"+c.match+" @"+c.odd+"</span><span onclick='removeItem("+i+")' style='color:#ff4444;cursor:pointer'>✕</span></div>";});document.getElementById('schedinaItems').innerHTML=html;document.getElementById('totalOdd').innerText=total.toFixed(2);calcWin();}
-function removeItem(i){cart[i].btn.classList.remove('selected');cart.splice(i,1);updateSchedina();}
-function clearSchedina(){cart.forEach(c=>c.btn.classList.remove('selected'));cart=[];updateSchedina();}
-function calcWin(){const s=parseFloat(document.getElementById('stakeInput').value)||0;const t=parseFloat(document.getElementById('totalOdd').innerText)||1;document.getElementById('potential').innerText=(s*t).toFixed(2);}
-async function piazzaSchedina(){const stake=parseFloat(document.getElementById('stakeInput').value);if(!stake)return alert('Importo');if(stake>saldo)return alert('Saldo insufficiente');const totalOdd=parseFloat(document.getElementById('totalOdd').innerText);const pot=(stake*totalOdd).toFixed(2);const matches=cart.map(c=>c.match+' @'+c.odd).join(' + ');saldo-=stake;document.getElementById('saldo').innerText=saldo.toFixed(2);try{await supa.from('profiles').update({balance:saldo}).eq('id',currentUser.id);}catch(e){}await supa.from('bets').insert([{user_id:currentUser.id,match:matches,odd:totalOdd,stake:stake,potential_win:pot,status:'pending'}]);clearSchedina();document.getElementById('stakeInput').value='';loadBets();loadSaldo();alert('Schedina piazzata EUR '+pot);}
-async function loadBets(){const {data}=await supa.from('bets').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});let html='';if(!data||data.length==0)html='<small style="color:#666">Nessuna schedina</small>';data.forEach(b=>{let dot='dot-pending',col='#888',lab='IN CORSO';if(b.status==='won'){dot='dot-won';col='#00ff88';lab='VINTA +EUR '+b.potential_win;}if(b.status==='lost'){dot='dot-lost';col='#ff3344';lab='PERSA';}html+="<div class='card' style='border-left-color:"+col+"'><span class='dot "+dot+"'></span><b style='font-size:12px'>"+b.match+"</b><span style='float:right;padding:3px 8px;border-radius:12px;font-size:10px;background:"+col+";color:#000;font-weight:900'>"+lab+"</span><br><small>Stake EUR "+b.stake+" @"+b.odd+" → EUR "+b.potential_win+"</small></div>";});document.getElementById('betsList').innerHTML=html;}
-setInterval(()=>{const now=new Date();document.querySelectorAll('.match').forEach(m=>{if(now>=new Date(m.dataset.start))m.classList.add('hidden');});},30000);
-</script></body></html>
+<div class="card match-card" data-start="21:00"><b>Stoke City vs Norwich City - Championship</b><br><small class="time-label">Inizio: 21:00</small><br><button onclick="piazza(this,'Stoke vs Norwich',2.40)">Scommetti @2.40</button></div>
+
+<div class="card match-card" data-start="21:00"><b>Southampton vs Birmingham City - Championship</b><br><small class="time-label">Inizio: 21:00</small><br><button onclick="piazza(this,'Southampton vs Birmingham',1.90)">Scommetti @1.90</button></div>
+
+<div class="card match-card" data-start="18:00"><b>IF Lyseng vs AC Horsens - DBU Pokalen Danimarca</b><br><small class="time-label">Inizio: 18:00</small><br><button onclick="piazza(this,'Lyseng vs Horsens',5.50)">Scommetti @5.50</button></div>
+
+<div class="card match-card" data-start="20:45"><b>Leek Town vs Warrington Town - Northern Premier League</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Leek Town vs Warrington',2.60)">Scommetti @2.60</button></div>
