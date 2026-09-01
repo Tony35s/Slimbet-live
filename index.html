@@ -1,32 +1,143 @@
-<!-- PARTITE REALI 1 SETTEMBRE 2026 - VERIFICATE -->
-<div class="card match-card" data-start="17:00"><b>Cerundolo vs Misolic - US Open 1° Turno</b><br><small class="time-label">Inizio: 17:00</small><br><button onclick="piazza(this,'Cerundolo vs Misolic',1.28)">Scommetti @1.28</button> <button onclick="piazza(this,'Misolic vs Cerundolo',3.75)">Scommetti @3.75</button></div>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>
+body{background:#0e0e12;color:#fff;font-family:Arial,sans-serif;padding:10px;margin:0}
+.card{background:#1e1e2a;padding:12px;border-radius:12px;margin:12px 0;border-left:4px solid gold}
+.topbar{background:#15151f;padding:12px;border-radius:12px;border:1px solid gold;display:flex;justify-content:space-between}
+button{padding:6px 10px;border-radius:6px;border:none;font-weight:800;background:gold;color:#000;cursor:pointer;margin:2px;font-size:11px}
+button.exact{background:#2a2a3a;color:#fff;border:1px solid gold;font-size:10px}
+input{padding:10px;border-radius:8px;border:1px solid #444;background:#222;color:#fff;width:90%;margin:5px 0}
+.market{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+.market-title{color:gold;font-size:11px;font-weight:bold;margin-top:10px;width:100%;border-top:1px solid #333;padding-top:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot-won{background:#00ff88}.dot-lost{background:#ff4444}.dot-pending{background:#00ff88;animation:blink 1s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.bet-won{border-left-color:#00ff88!important}.bet-lost{border-left-color:#ff4444!important}.bet-pending{border-left-color:#ffcc00!important}
+.closed{display:none!important}
+#authBox{max-width:360px;margin:50px auto;text-align:center;background:#1e1e2a;padding:24px;border-radius:16px;border:1px solid gold}
+#mainApp{display:none}
+</style></head><body>
 
-<div class="card match-card" data-start="17:30"><b>Madison Keys vs Alina Korneeva - US Open Donne</b><br><small class="time-label">Inizio: 17:30</small><br><button onclick="piazza(this,'Keys vs Korneeva',1.22)">Scommetti @1.22</button> <button onclick="piazza(this,'Korneeva vs Keys',4.30)">Scommetti @4.30</button></div>
+<div id="authBox">
+<h2 style="color:gold">SLIMBET PRO</h2>
+<input id="email" type="email" placeholder="Email"><br>
+<input id="password" type="password" placeholder="Password"><br>
+<button onclick="login()">ACCEDI</button><button onclick="register()" style="background:#fff;margin-left:4px">REGISTRATI</button>
+<p id="authMsg" style="color:#ff5555;font-size:12px"></p>
+</div>
 
-<div class="card match-card" data-start="18:40"><b>Taylor Fritz vs Darwin Blanch - US Open 1° Turno</b><br><small class="time-label">Inizio: 18:40</small><br><button onclick="piazza(this,'Fritz vs Blanch',1.08)">Scommetti @1.08</button> <button onclick="piazza(this,'Blanch vs Fritz',8.50)">Scommetti @8.50</button></div>
+<div id="mainApp">
+<div class="topbar"><h2 style="color:gold;margin:0">SLIMBET PRO</h2><div style="text-align:right"><small id="userEmail"></small><br>Saldo: EUR <span id="saldo">0.00</span> <button onclick="logout()" style="padding:3px 8px;font-size:10px">Esci</button></div></div>
+<h3 style="color:gold">OGGI - Tutti i Mercati Reali</h3>
+<div id="matchesList">
 
-<div class="card match-card" data-start="20:45"><b>Bradford vs Cambridge Utd - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Bradford vs Cambridge Utd',1.95)">Scommetti @1.95</button></div>
+<div class="card match-card" data-start="21:00">
+<b>Aston Villa vs Arsenal - 21:00</b>
+<div class="market-title">1X2</div><div class="market">
+<button onclick="piazza(this,'Villa-Arsenal 1',2.85)">1 @2.85</button>
+<button onclick="piazza(this,'Villa-Arsenal X',3.40)">X @3.40</button>
+<button onclick="piazza(this,'Villa-Arsenal 2',2.50)">2 @2.50</button>
+</div>
+<div class="market-title">GOL / OVER</div><div class="market">
+<button onclick="piazza(this,'Villa-Arsenal GOL',1.75)">GOL @1.75</button>
+<button onclick="piazza(this,'Villa-Arsenal NOGOL',2.10)">NOGOL @2.10</button>
+<button onclick="piazza(this,'Villa-Arsenal OVER 2.5',1.90)">OVER @1.90</button>
+</div>
+<div class="market-title">RISULTATO ESATTO 0-0 a 4-4</div><div class="market">
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 0-0',11.0)">0-0 @11</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 1-0',9.5)">1-0 @9.5</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 0-1',8.5)">0-1 @8.5</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 1-1',6.0)">1-1 @6.0</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 2-1',8.0)">2-1 @8.0</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 2-0',12.0)">2-0 @12</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 3-0',21.0)">3-0 @21</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 3-1',14.0)">3-1 @14</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 3-2',21.0)">3-2 @21</button>
+<button class="exact" onclick="piazza(this,'Villa-Arsenal 4-4',101.0)">4-4 @101</button>
+</div></div>
 
-<div class="card match-card" data-start="20:45"><b>Bromley vs Leyton Orient - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Bromley vs Leyton Orient',2.45)">Scommetti @2.45</button></div>
+<div class="card match-card" data-start="21:30">
+<b>Barcellona vs Rayo Vallecano - 21:30</b>
+<div class="market-title">1X2 + ESATTO</div><div class="market">
+<button onclick="piazza(this,'Barca-Rayo 1',1.35)">1 @1.35</button>
+<button onclick="piazza(this,'Barca-Rayo X',5.0)">X @5.0</button>
+<button onclick="piazza(this,'Barca-Rayo 2',8.0)">2 @8.0</button>
+<button class="exact" onclick="piazza(this,'Barca-Rayo 0-0',14.0)">0-0 @14</button>
+<button class="exact" onclick="piazza(this,'Barca-Rayo 1-0',8.0)">1-0 @8.0</button>
+<button class="exact" onclick="piazza(this,'Barca-Rayo 2-0',6.5)">2-0 @6.5</button>
+<button class="exact" onclick="piazza(this,'Barca-Rayo 3-0',7.5)">3-0 @7.5</button>
+<button class="exact" onclick="piazza(this,'Barca-Rayo 2-1',8.5)">2-1 @8.5</button>
+<button class="exact" onclick="piazza(this,'Barca-Rayo 4-0',11.0)">4-0 @11</button>
+<button class="exact" onclick="piazza(this,'Barca-Rayo 1-1',9.0)">1-1 @9.0</button>
+<button class="exact" onclick="piazza(this,'Barca-Rayo 4-4',101.0)">4-4 @101</button>
+</div></div>
 
-<div class="card match-card" data-start="20:45"><b>Doncaster vs Notts County - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Doncaster vs Notts County',2.10)">Scommetti @2.10</button></div>
+</div>
+<h3 style="color:gold">Le Mie Scommesse Salvate</h3>
+<div id="betsList"></div>
+</div>
 
-<div class="card match-card" data-start="20:45"><b>Huddersfield vs Oxford Utd - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Huddersfield vs Oxford Utd',2.05)">Scommetti @2.05</button></div>
+<script>
+const SUPABASE_URL='https://qooxqqdcfcfncexjhddo.supabase.co';
+const SUPABASE_KEY='sb_publishable_6SH5fbxXEiI7wFrvo_YghQ_o4PU9EFA';
+const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentUser=null; let saldo=125.00; let saldoIniziale=125.00;
 
-<div class="card match-card" data-start="20:45"><b>Leicester City vs Plymouth Argyle - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Leicester City vs Plymouth Argyle',1.55)">Scommetti @1.55</button></div>
+async function checkSession(){const {data}=await supa.auth.getSession(); if(data.session){currentUser=data.session.user; showApp(); await loadSaldo(); await loadBets();}} checkSession();
+async function register(){const e=document.getElementById('email').value; const p=document.getElementById('password').value; const {data,error}=await supa.auth.signUp({email:e,password:p}); if(error) document.getElementById('authMsg').innerText=error.message; else{await supa.from('profiles').insert([{id:data.user.id,balance:125.00}]); document.getElementById('authMsg').innerText='Registrato! Ora accedi.';}}
+async function login(){const e=document.getElementById('email').value; const p=document.getElementById('password').value; const {data,error}=await supa.auth.signInWithPassword({email:e,password:p}); if(error) document.getElementById('authMsg').innerText=error.message; else{currentUser=data.user; showApp(); await loadSaldo(); await loadBets();}}
+function showApp(){document.getElementById('authBox').style.display='none'; document.getElementById('mainApp').style.display='block'; document.getElementById('userEmail').innerText=currentUser.email;}
+async function logout(){await supa.auth.signOut(); location.reload();}
 
-<div class="card match-card" data-start="20:45"><b>Peterborough vs Stevenage - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Peterborough vs Stevenage',2.20)">Scommetti @2.20</button></div>
+async function loadSaldo(){
+  const {data}=await supa.from('profiles').select('balance').eq('id',currentUser.id).single();
+  if(data){ saldo=data.balance; document.getElementById('saldo').innerText=saldo.toFixed(2); }
+  else{ await supa.from('profiles').insert([{id:currentUser.id,balance:125.00}]); saldo=125.00; document.getElementById('saldo').innerText='125.00'; }
+}
 
-<div class="card match-card" data-start="20:45"><b>Wycombe vs Sheffield Wednesday - League One</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Wycombe vs Sheffield Wednesday',2.30)">Scommetti @2.30</button></div>
+function checkTime(){const now=new Date(); document.querySelectorAll('.match-card').forEach(c=>{const t=c.dataset.start.split(':'); const s=new Date(); s.setHours(parseInt(t[0]),parseInt(t[1]),0,0); if(now>=s) c.classList.add('closed');});} setInterval(checkTime,10000); checkTime();
 
-<div class="card match-card" data-start="20:45"><b>Derby County vs Portsmouth - Championship</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Derby vs Portsmouth',2.15)">Scommetti @2.15</button></div>
+async function piazza(btn,match,odd){
+  const c=btn.closest('.match-card'); const t=c.dataset.start.split(':'); const s=new Date(); s.setHours(parseInt(t[0]),parseInt(t[1]),0,0); if(new Date()>=s){alert('Chiusa'); c.classList.add('closed'); return;}
+  const stakeStr=prompt('Quanto punti su '+match+' @'+odd+'? Saldo: EUR '+saldo.toFixed(2)); if(!stakeStr) return; const stake=parseFloat(stakeStr);
+  if(stake>saldo){alert('Saldo insufficiente! Hai EUR '+saldo.toFixed(2)); return;}
+  const pot=(stake*odd).toFixed(2);
+  saldo-=stake; document.getElementById('saldo').innerText=saldo.toFixed(2);
+  await supa.from('profiles').update({balance:saldo}).eq('id',currentUser.id);
+  const {error}=await supa.from('bets').insert([{user_id:currentUser.id,match:match,odd:odd,stake:stake,potential_win:pot,status:'pending'}]);
+  if(error) alert(error.message); else loadBets();
+}
 
-<div class="card match-card" data-start="20:45"><b>Blackburn Rovers vs Lincoln City - Championship (EFL Cup)</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Blackburn vs Lincoln',1.85)">Scommetti @1.85</button></div>
+async function loadBets(){
+  const {data}=await supa.from('bets').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+  let html=''; let saldoCalcolato=125.00;
+  // Prima calcola saldo reale da tutte le bet
+  let totaleStakePerso=0; let totaleVincite=0;
+  data.forEach(b=>{
+    if(b.status==='pending'){ totaleStakePerso+=parseFloat(b.stake); }
+    if(b.status==='lost'){ totaleStakePerso+=parseFloat(b.stake); }
+    if(b.status==='won'){ totaleStakePerso+=parseFloat(b.stake); totaleVincite+=parseFloat(b.potential_win); }
+  });
+  // Se hai già un profilo, ricalcola
+  const {data:prof}=await supa.from('profiles').select('balance').eq('id',currentUser.id).single();
+  if(prof){
+    // Se vinci, aggiungi vincita al saldo
+    saldo=prof.balance;
+    document.getElementById('saldo').innerText=saldo.toFixed(2);
+  }
 
-<div class="card match-card" data-start="21:00"><b>Stoke City vs Norwich City - Championship</b><br><small class="time-label">Inizio: 21:00</small><br><button onclick="piazza(this,'Stoke vs Norwich',2.40)">Scommetti @2.40</button></div>
+  data.forEach(b=>{
+    let cls='bet-pending'; let dot='dot-pending'; let lab='IN CORSO';
+    if(b.status==='won'){cls='bet-won'; dot='dot-won'; lab='VINTA +EUR '+b.potential_win;}
+    if(b.status==='lost'){cls='bet-lost'; dot='dot-lost'; lab='PERSA';}
+    html+="<div class='card "+cls+"'><span class='dot "+dot+"'></span><b>"+b.match+"</b><small style='float:right;color:gold'>"+lab+"</small><br><small>Stake EUR "+b.stake+" @"+b.odd+" -> Vincita EUR "+b.potential_win+"</small></div>";
+  });
+  document.getElementById('betsList').innerHTML=html;
+}
 
-<div class="card match-card" data-start="21:00"><b>Southampton vs Birmingham City - Championship</b><br><small class="time-label">Inizio: 21:00</small><br><button onclick="piazza(this,'Southampton vs Birmingham',1.90)">Scommetti @1.90</button></div>
-
-<div class="card match-card" data-start="18:00"><b>IF Lyseng vs AC Horsens - DBU Pokalen Danimarca</b><br><small class="time-label">Inizio: 18:00</small><br><button onclick="piazza(this,'Lyseng vs Horsens',5.50)">Scommetti @5.50</button></div>
-
-<div class="card match-card" data-start="20:45"><b>Leek Town vs Warrington Town - Northern Premier League</b><br><small class="time-label">Inizio: 20:45</small><br><button onclick="piazza(this,'Leek Town vs Warrington',2.60)">Scommetti @2.60</button></div>
+// Funzione chiamata dall'admin quando mette VINTA
+async function accreditaVincita(betId, importoVincita){
+  const {data:prof}=await supa.from('profiles').select('balance').eq('id',currentUser.id).single();
+  const nuovoSaldo=parseFloat(prof.balance)+parseFloat(importoVincita);
+  await supa.from('profiles').update({balance:nuovoSaldo}).eq('id',currentUser.id);
+  saldo=nuovoSaldo; document.getElementById('saldo').innerText=saldo.toFixed(2);
+}
+</script>
+</body></html>
