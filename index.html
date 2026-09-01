@@ -1,18 +1,85 @@
-<!-- AGGIORNAMENTO 1 SETTEMBRE 2026 - PARTITE REALI -->
-<div class="card match-card"><b>🇩🇪 HEBC Hamburg vs Borussia Dortmund - DFB Pokal</b><br><small>20:45</small><br><button onclick="piazza(this,'HEBC Hamburg vs Dortmund',12.00)">1 @12.00</button> <button onclick="piazza(this,'Pareggio Hamburg Dortmund',7.50)">X @7.50</button> <button onclick="piazza(this,'Dortmund vs HEBC Hamburg',1.08)">2 @1.08</button></div>
+<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SLIMBET PRO - Scommesse Sportive</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><style>
+body{background:#0a0a0f;color:#fff;font-family:Arial;margin:0;padding:0}
+.header{background:#15151f;border-bottom:2px solid gold;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
+.logo{color:gold;font-weight:900;font-size:22px}
+.saldo{background:gold;color:#000;padding:6px 12px;border-radius:20px;font-weight:900;font-size:14px}
+.card{background:#1e1e2a;padding:14px;border-radius:14px;margin:10px 12px;border-left:4px solid gold}
+button{padding:10px 14px;border-radius:10px;border:none;font-weight:900;cursor:pointer;margin:3px}
+.betBtn{background:#222;color:#fff;border:1px solid gold;width:100%;margin-top:8px}
+.betBtn:hover{background:gold;color:#000}
+input{padding:10px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;margin:4px;width:90%}
+#loginBox{max-width:380px;margin:40px auto;text-align:center;background:#1e1e2a;padding:24px;border-radius:20px;border:1px solid gold}
+#mainApp{display:none}
+.carrello{position:fixed;bottom:0;left:0;right:0;background:#15151f;border-top:2px solid gold;padding:12px;display:none;z-index:100}
+</style></head><body>
 
-<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Lincoln City vs Blackburn Rovers - Championship</b><br><small>20:45</small><br><button onclick="piazza(this,'Lincoln vs Blackburn',2.80)">1 @2.80</button> <button onclick="piazza(this,'Pareggio Lincoln Blackburn',3.20)">X @3.20</button> <button onclick="piazza(this,'Blackburn vs Lincoln',2.45)">2 @2.45</button></div>
+<div class="header">
+<div class="logo">👑 SLIMBET PRO</div>
+<div><span id="userEmail" style="font-size:11px;color:#888;margin-right:8px"></span><span class="saldo" id="saldoTop">EUR 0.00</span> <button onclick="logout()" style="background:#222;color:#fff;font-size:11px">Esci</button></div>
+</div>
 
-<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Stoke City vs Norwich City - Championship</b><br><small>21:00</small><br><button onclick="piazza(this,'Stoke vs Norwich',2.40)">1 @2.40</button> <button onclick="piazza(this,'Pareggio Stoke Norwich',3.30)">X @3.30</button> <button onclick="piazza(this,'Norwich vs Stoke',2.85)">2 @2.85</button></div>
+<div id="loginBox">
+<h2 style="color:gold;margin:0">Accedi o Registrati</h2><p style="color:#888;font-size:12px">Per giocare su SlimBetPro</p>
+<input id="email" type="email" placeholder="Email"><br>
+<input id="pass" type="password" placeholder="Password"><br>
+<button onclick="login()" style="background:gold;width:95%;margin-top:10px">ACCEDI</button>
+<button onclick="registra()" style="background:#222;color:#fff;border:1px solid gold;width:95%">REGISTRATI</button>
+<p id="msg" style="color:#ff5555;font-size:12px"></p>
+</div>
 
-<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Chesterfield vs Gillingham - League Two</b><br><small>20:45</small><br><button onclick="piazza(this,'Chesterfield vs Gillingham',2.10)">1 @2.10</button> <button onclick="piazza(this,'Pareggio Chesterfield Gillingham',3.40)">X @3.40</button> <button onclick="piazza(this,'Gillingham vs Chesterfield',3.20)">2 @3.20</button></div>
+<div id="mainApp">
+<div style="padding:10px 12px"><h3 style="color:gold;margin:6px 0">🔥 Partite di Oggi - LIVE</h3><small style="color:#888">Quote reali - Aggiornate ogni giorno</small></div>
+<div id="matches"></div>
+<div style="height:120px"></div>
+</div>
 
-<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Walsall vs Crewe Alexandra - League Two</b><br><small>20:45</small><br><button onclick="piazza(this,'Walsall vs Crewe',2.25)">1 @2.25</button> <button onclick="piazza(this,'Pareggio Walsall Crewe',3.30)">X @3.30</button> <button onclick="piazza(this,'Crewe vs Walsall',3.00)">2 @3.00</button></div>
+<div class="carrello" id="carrello">
+<b id="cartMatch" style="color:gold"></b><br><small>Quota: <b id="cartQuota"></b></small><br>
+<div style="margin-top:8px"><input id="stake" type="number" placeholder="Importo € (min 1)" style="width:120px"> <span style="font-size:12px">Vincita: EUR <b id="potWin">0.00</b></span></div>
+<button onclick="piazzaSchedina()" style="background:gold;width:100%;margin-top:8px">🎫 GIOCA SCHEDINA</button>
+<button onclick="chiudiCarrello()" style="background:#222;color:#fff;width:100%">Chiudi</button>
+</div>
 
-<div class="card match-card"><b>🎾 Flavio Cobolli vs Francisco Comesana - US Open</b><br><small>17:00 - Arthur Ashe</small><br><button onclick="piazza(this,'Cobolli vs Comesana',1.65)">Cobolli @1.65</button> <button onclick="piazza(this,'Comesana vs Cobolli',2.20)">Comesana @2.20</button></div>
+<script>
+const SUPABASE_URL='https://qooxqqdcfcfncexjhddo.supabase.co';
+const SUPABASE_KEY='sb_publishable_6SH5fbxXEiI7wFrvo_YghQ_o4PU9EFA';
+const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentBet=null, userProfile=null;
 
-<div class="card match-card"><b>🎾 Taylor Fritz vs Darwin Blanch - US Open</b><br><small>18:40</small><br><button onclick="piazza(this,'Fritz vs Blanch',1.07)">Fritz @1.07</button> <button onclick="piazza(this,'Blanch vs Fritz',8.50)">Blanch @8.50</button></div>
+async function checkSession(){const {data}=await supa.auth.getSession(); if(data.session){ document.getElementById('loginBox').style.display='none'; document.getElementById('mainApp').style.display='block'; document.getElementById('userEmail').innerText=data.session.user.email; loadProfile(); loadMatches(); }}
+checkSession();
 
-<div class="card match-card"><b>🎾 Mirra Andreeva vs Janice Tjen - US Open Donne</b><br><small>18:40</small><br><button onclick="piazza(this,'Andreeva vs Tjen',1.18)">Andreeva @1.18</button> <button onclick="piazza(this,'Tjen vs Andreeva',4.80)">Tjen @4.80</button></div>
+async function registra(){ const e=document.getElementById('email').value, p=document.getElementById('pass').value; const {data,error}=await supa.auth.signUp({email:e,password:p}); if(error){document.getElementById('msg').innerText=error.message; return;} // crea profilo con 0
+  await supa.from('profiles').insert({id:data.user.id, email:e, balance:0}); alert('Registrato! Ora accedi.'); }
+async function login(){ const e=document.getElementById('email').value, p=document.getElementById('pass').value; const {data,error}=await supa.auth.signInWithPassword({email:e,password:p}); if(error){document.getElementById('msg').innerText=error.message; return;} document.getElementById('loginBox').style.display='none'; document.getElementById('mainApp').style.display='block'; document.getElementById('userEmail').innerText=data.user.email; loadProfile(); loadMatches(); }
+async function logout(){ await supa.auth.signOut(); location.reload(); }
 
-<div class="card match-card"><b>🎾 Francisco Cerundolo vs Misolic - US Open</b><br><small>17:00</small><br><button onclick="piazza(this,'Cerundolo vs Misolic',1.35)">Cerundolo @1.35</button> <button onclick="piazza(this,'Misolic vs Cerundolo',3.10)">Misolic @3.10</button></div>
+async function loadProfile(){ const {data:{user}}=await supa.auth.getUser(); const {data}=await supa.from('profiles').select('*').eq('id',user.id).single(); userProfile=data; document.getElementById('saldoTop').innerText='EUR '+parseFloat(data.balance||0).toFixed(2); }
+
+function loadMatches(){
+  // QUI INCULLI OGNI GIORNO IL BLOCCO CHE TI MANDO ALLE 9:00
+  document.getElementById('matches').innerHTML=`
+<div class="card match-card"><b>🇩🇪 HEBC Hamburg vs Borussia Dortmund - DFB Pokal</b><br><small>20:45</small><br><button class="betBtn" onclick="apriCarrello('HEBC Hamburg vs Dortmund',12.00)">1 @12.00</button> <button class="betBtn" onclick="apriCarrello('Pareggio Hamburg Dortmund',7.50)">X @7.50</button> <button class="betBtn" onclick="apriCarrello('Dortmund vs Hamburg',1.08)">2 @1.08</button></div>
+<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Lincoln City vs Blackburn Rovers - Championship</b><br><small>20:45</small><br><button class="betBtn" onclick="apriCarrello('Lincoln vs Blackburn',2.80)">1 @2.80</button> <button class="betBtn" onclick="apriCarrello('Blackburn vs Lincoln',2.45)">2 @2.45</button></div>
+<div class="card match-card"><b>🏴󐁧󐁢󐁥󐁮󐁧󐁿 Stoke City vs Norwich City - Championship</b><br><small>21:00</small><br><button class="betBtn" onclick="apriCarrello('Stoke vs Norwich',2.40)">1 @2.40</button> <button class="betBtn" onclick="apriCarrello('Norwich vs Stoke',2.85)">2 @2.85</button></div>
+<div class="card match-card"><b>🎾 Flavio Cobolli vs Francisco Comesana - US Open</b><br><small>17:00</small><br><button class="betBtn" onclick="apriCarrello('Cobolli vs Comesana',1.65)">Cobolli @1.65</button> <button class="betBtn" onclick="apriCarrello('Comesana vs Cobolli',2.20)">Comesana @2.20</button></div>
+<div class="card match-card"><b>🎾 Taylor Fritz vs Darwin Blanch - US Open</b><br><small>18:40</small><br><button class="betBtn" onclick="apriCarrello('Fritz vs Blanch',1.07)">Fritz @1.07</button></div>
+`;
+}
+
+function apriCarrello(match, quota){ currentBet={match, quota}; document.getElementById('cartMatch').innerText=match; document.getElementById('cartQuota').innerText=quota; document.getElementById('carrello').style.display='block'; document.getElementById('stake').oninput=calcWin; calcWin(); }
+function chiudiCarrello(){ document.getElementById('carrello').style.display='none'; currentBet=null; }
+function calcWin(){ const s=parseFloat(document.getElementById('stake').value||0); document.getElementById('potWin').innerText=(s* (currentBet?.quota||0)).toFixed(2); }
+
+async function piazzaSchedina(){
+  const stake=parseFloat(document.getElementById('stake').value);
+  if(!stake||stake<1)return alert('Minimo 1 EUR');
+  if(stake>parseFloat(userProfile.balance))return alert('Saldo insufficiente!');
+  const {data:{user}}=await supa.auth.getUser();
+  const pot=stake*currentBet.quota;
+  await supa.from('bets').insert({user_id:user.id, match:currentBet.match, stake:stake, odd:currentBet.quota, potential_win:pot, status:'pending'});
+  const nuovo=parseFloat(userProfile.balance)-stake;
+  await supa.from('profiles').update({balance:nuovo}).eq('id',user.id);
+  alert('✅ Schedina giocata! Potenziale vincita EUR '+pot.toFixed(2)); chiudiCarrello(); loadProfile();
+}
+</script></body></html>
