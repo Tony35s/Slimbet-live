@@ -15,19 +15,21 @@ input{padding:10px;border-radius:10px;border:1px solid #444;background:#111;colo
 #loginBox{max-width:380px;margin:40px auto;text-align:center;background:#1e1e2a;padding:24px;border-radius:20px;border:1px solid gold}
 #mainApp{display:none}
 .carrello{position:fixed;bottom:0;left:0;right:0;background:#15151f;border-top:2px solid gold;padding:12px;display:none;z-index:100}
-.betHistoryCard{background:#1e1e2a;margin:8px;border-radius:12px;padding:12px;border-left:4px solid #888}
-.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
-.dot-pending{background:#888;animation:blink 1s infinite}.dot-won{background:#00ff88}.dot-lost{background:#ff3344}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.betHistoryCard{background:#1e1e2a;margin:8px;border-radius:12px;padding:12px;border-left:4px solid #888;position:relative}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
+.dot-pending{background:#888;animation:blink 1s infinite;box-shadow:0 0 6px #888}.dot-won{background:#00ff88;box-shadow:0 0 8px #00ff88}.dot-lost{background:#ff3344;box-shadow:0 0 8px #ff3344}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.detailRow{display:flex;justify-content:space-between;font-size:12px;margin:4px 0}
+.detailRow b{color:gold}
 </style></head><body>
 <div class="header"><div class="logo">👑 SLIMBET PRO</div><div><span id="userEmail" style="font-size:10px;color:#888"></span> <span class="saldo" id="saldoTop">EUR 0.00</span> <button onclick="logout()" style="background:#222;color:#fff;font-size:11px;padding:6px 10px;border-radius:10px;border:1px solid #444">Esci</button></div></div>
 <div id="loginBox"><h2 style="color:gold">Accedi</h2><input id="email" type="email" placeholder="Email"><br><input id="pass" type="password" placeholder="Password"><br><button onclick="login()" style="background:gold;width:95%;margin-top:8px;padding:12px;border-radius:10px;border:none;font-weight:900">ACCEDI</button><button onclick="registra()" style="background:#222;color:#fff;border:1px solid gold;width:95%;padding:12px;border-radius:10px;margin-top:6px">REGISTRATI</button><p id="msg" style="color:#ff5555;font-size:12px"></p></div>
 <div id="mainApp">
 <div style="padding:12px"><h3 style="color:gold;margin:0">🔥 Tutti i Campionati - Diretta.it OGGI</h3><small style="color:#888" id="clock"></small></div>
 <div id="leagues"></div>
-<div style="padding:12px;margin-top:18px"><h3 style="color:gold;margin:0">🎫 Le Mie Schedine - LIVE</h3><small style="color:#888">⚪ In corso | 🟢 Vinta | 🔴 Persa</small></div>
+<div style="padding:12px;margin-top:18px"><h3 style="color:gold;margin:0">🎫 Le Mie Schedine - LIVE DETTAGLIO</h3><small style="color:#888">⚪ In corso | 🟢 Vinta | 🔴 Persa - Aggiorna da admin</small></div>
 <div id="myBets"></div>
-<div style="height:150px"></div>
+<div style="height:160px"></div>
 </div>
 <div class="carrello" id="carrello"><b id="cartMatch" style="color:gold;font-size:13px"></b><br><small>Esito: <b id="cartEsito"></b> @ <b id="cartQuota"></b></small><br><div style="margin-top:8px"><input id="stake" type="number" placeholder="Importo €" style="width:110px"> Vincita: EUR <b id="potWin">0.00</b></div><button onclick="piazzaSchedina()" style="background:gold;width:100%;margin-top:8px;padding:12px;border-radius:10px;border:none;font-weight:900">🎫 GIOCA SCHEDINA</button><button onclick="chiudiCarrello()" style="background:#222;color:#fff;width:100%;padding:10px;border-radius:10px;border:1px solid #444;margin-top:4px">Chiudi</button></div>
 <script>
@@ -37,22 +39,14 @@ const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentBet=null, userProfile=null;
 // TUTTI I CAMPIONATI DEL MONDO OGGI 2 SETTEMBRE 2026 DA DIRETTA.IT
 const PARTITE_OGGI = [
-  // ITALIA - Coppa Italia
   {id:'ci1', league:'🇮🇹 Coppa Italia - Diretta.it', match:'Sassuolo vs Frosinone', time:'15:00', start:'2026-09-02T15:00:00+02:00', odds:{'1':1.85,'X':3.40,'2':4.00,'1X':1.20,'X2':1.85,'12':1.28,'Gol':1.70,'NoGol':2.00,'Over2.5':1.80,'Under2.5':1.95,'Over1.5':1.25}},
   {id:'ci2', league:'🇮🇹 Coppa Italia - Diretta.it', match:'Udinese vs Venezia', time:'18:00', start:'2026-09-02T18:00:00+02:00', odds:{'1':1.75,'X':3.50,'2':4.50,'1X':1.16,'X2':1.95,'12':1.26,'Gol':1.80,'NoGol':1.90,'Over2.5':1.85,'Under2.5':1.90}},
-  // MONDO - Campionati esteri oggi su Diretta.it
-  {id:'sg1', league:'🇸🇬 Singapore Premier League 2 - Diretta.it', match:'Hougang Utd Riserva vs Balestier Khalsa Riserva', time:'13:30', start:'2026-09-02T13:30:00+02:00', odds:{'1':2.20,'X':3.40,'2':2.80,'Gol':1.60,'Over2.5':1.65,'Under2.5':2.15}},
-  {id:'sg2', league:'🇸🇬 Singapore Premier League 2 - Diretta.it', match:'Young Lions Riserva vs Tanjong Pagar Utd Riserva', time:'13:30', start:'2026-09-02T13:30:00+02:00', odds:{'1':2.10,'X':3.30,'2':3.00,'Gol':1.65,'Over2.5':1.70}},
-  {id:'lt1', league:'🇱🇹 Lituania II Lyga - Diretta.it', match:'Klaipedos FSM vs Vilnius Football Academy', time:'17:00', start:'2026-09-02T17:00:00+02:00', odds:{'1':2.40,'X':3.20,'2':2.60,'Gol':1.75,'NoGol':1.95,'Over2.5':1.90}},
-  {id:'eu1', league:'🇪🇺 Europa Cup Women - Diretta.it', match:'FC Seasters Odessa vs Rosenborg BK Kvinner', time:'18:00', start:'2026-09-02T18:00:00+02:00', odds:{'1':5.50,'X':4.20,'2':1.45,'Gol':1.65,'Over2.5':1.65,'Under2.5':2.15}},
-  {id:'eu2', league:'🇪🇺 Europa Cup Women - Diretta.it', match:'ZNK Radomlje vs Valerenga Oslo', time:'18:45', start:'2026-09-02T18:45:00+02:00', odds:{'1':7.00,'X':5.00,'2':1.30,'Gol':1.80,'NoGol':1.90,'Over2.5':1.70}},
-  {id:'us1', league:'🎾 US Open 2° Turno - Diretta.it', match:'Jasmine Paolini vs Lucrezia Stefanini', time:'17:30', start:'2026-09-02T17:30:00+02:00', odds:{'1':1.25,'2':3.80,'Over2.5':2.10,'Under2.5':1.70}},
-  {id:'us2', league:'🎾 US Open 2° Turno - Diretta.it', match:'Arthur Rinderknech vs Jaume Munar', time:'17:00', start:'2026-09-02T17:00:00+02:00', odds:{'1':1.85,'2':1.95,'Over2.5':1.75}},
-  {id:'us3', league:'🎾 US Open 2° Turno - Diretta.it', match:'Denis Shapovalov vs Luca Van Assche', time:'17:00', start:'2026-09-02T17:00:00+02:00', odds:{'1':1.40,'2':2.85,'Over2.5':1.90}},
-  {id:'us4', league:'🎾 US Open 2° Turno - Diretta.it', match:'Alexander Zverev vs Lorenzo Sonego', time:'23:00', start:'2026-09-02T23:00:00+02:00', odds:{'1':1.18,'2':4.80,'Over2.5':1.65}},
-  {id:'us5', league:'🎾 US Open 2° Turno - Diretta.it', match:'Gael Monfils vs Daniel Vallejo', time:'00:30', start:'2026-09-03T00:30:00+02:00', odds:{'1':1.65,'2':2.20,'Over2.5':1.80}},
-  {id:'br1', league:'🇧🇷 Brasile Serie B - Diretta.it', match:'Chapecoense vs Atletico Goianiense', time:'00:30', start:'2026-09-03T00:30:00+02:00', odds:{'1':2.10,'X':3.10,'2':3.40,'Gol':1.85,'Over2.5':2.00}},
-  {id:'ar1', league:'🇦🇷 Argentina Liga - Diretta.it', match:'Boca Juniors vs River Plate', time:'02:00', start:'2026-09-03T02:00:00+02:00', odds:{'1':2.30,'X':3.00,'2':3.00,'Gol':1.80,'Over2.5':2.10}},
+  {id:'sg1', league:'🇸🇬 Singapore PL2 - Diretta.it', match:'Hougang Utd Res vs Balestier Khalsa Res', time:'13:30', start:'2026-09-02T13:30:00+02:00', odds:{'1':2.20,'X':3.40,'2':2.80,'Over2.5':1.65}},
+  {id:'lt1', league:'🇱🇹 Lituania II Lyga - Diretta.it', match:'Klaipedos FSM vs Vilnius FA', time:'17:00', start:'2026-09-02T17:00:00+02:00', odds:{'1':2.40,'X':3.20,'2':2.60,'Over2.5':1.90}},
+  {id:'eu1', league:'🇪🇺 Europa Cup Women - Diretta.it', match:'FC Seasters Odessa vs Rosenborg BK', time:'18:00', start:'2026-09-02T18:00:00+02:00', odds:{'1':5.50,'X':4.20,'2':1.45,'Over2.5':1.65}},
+  {id:'us1', league:'🎾 US Open - Diretta.it', match:'Jasmine Paolini vs Lucrezia Stefanini', time:'17:30', start:'2026-09-02T17:30:00+02:00', odds:{'1':1.25,'2':3.80}},
+  {id:'us2', league:'🎾 US Open - Diretta.it', match:'Alexander Zverev vs Lorenzo Sonego', time:'23:00', start:'2026-09-02T23:00:00+02:00', odds:{'1':1.18,'2':4.80}},
+  {id:'us3', league:'🎾 US Open - Diretta.it', match:'Gael Monfils vs Daniel Vallejo', time:'00:30', start:'2026-09-03T00:30:00+02:00', odds:{'1':1.65,'2':2.20}},
 ];
 const RIS_ESATTI = ['1-0','2-0','2-1','3-0','3-1','3-2','0-0','1-1','2-2','0-1','0-2','1-2','0-3','1-3','2-3','Altro','4-0','4-1','0-4','1-4','3-3','4-2','5-0','0-5','4-3'];
 function isLive(startIso){ return new Date() >= new Date(startIso); }
@@ -62,53 +56,75 @@ async function registra(){const e=document.getElementById('email').value,p=docum
 async function login(){const e=document.getElementById('email').value,p=document.getElementById('pass').value;const {data,error}=await supa.auth.signInWithPassword({email:e,password:p}); if(error){document.getElementById('msg').innerText=error.message;return;} document.getElementById('loginBox').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('userEmail').innerText=data.user.email; loadProfile(); startAll();}
 async function logout(){await supa.auth.signOut();location.reload();}
 async function loadProfile(){const {data:{user}}=await supa.auth.getUser();const {data}=await supa.from('profiles').select('*').eq('id',user.id).single(); userProfile=data; document.getElementById('saldoTop').innerText='EUR '+parseFloat(data.balance||0).toFixed(2);}
-function startAll(){ renderLeagues(); loadMyBets(); setInterval(()=>{ renderLeagues(); loadMyBets(); document.getElementById('clock').innerText=new Date().toLocaleTimeString('it-IT')+' - Diretta.it Mondiale - Si tolgono da sole'; }, 30000); document.getElementById('clock').innerText=new Date().toLocaleTimeString('it-IT')+' - Diretta.it Mondiale'; }
+function startAll(){ renderLeagues(); loadMyBets(); setInterval(()=>{ renderLeagues(); loadMyBets(); document.getElementById('clock').innerText=new Date().toLocaleTimeString('it-IT')+' - Auto'; }, 15000); document.getElementById('clock').innerText=new Date().toLocaleTimeString('it-IT'); }
 function renderLeagues(){
   const groups={}; PARTITE_OGGI.forEach(p=>{ if(isLive(p.start)) return; if(!groups[p.league]) groups[p.league]=[]; groups[p.league].push(p); });
   let html=''; let tot=0; Object.keys(groups).forEach(league=>{
     const safeId=league.replace(/[^a-z0-9]/gi,''); tot+=groups[league].length;
     html+=`<div class="leagueHeader" onclick="toggleLeague('${safeId}')"><b>${league} (${groups[league].length})</b><span>▼</span></div><div id="lg_${safeId}">`;
     groups[league].forEach(m=>{
-      html+=`<div class="matchCard"><b>${m.match}</b> <small style="color:#888">- ${m.time}</small> <small style="color:gold"> - Fino a ${m.time}</small>
+      html+=`<div class="matchCard"><b>${m.match}</b> <small style="color:#888">- ${m.time}</small>
         <div class="marketTitle">ESITO 1X2</div><div class="oddsGrid">
           <div class="oddBtn" onclick="apriCarrello('${m.match}','1',${m.odds['1']||2})">1<br><b>@${m.odds['1']||2}</b></div>
           <div class="oddBtn" onclick="apriCarrello('${m.match}','X',${m.odds['X']||3.2})">X<br><b>@${m.odds['X']||3.2}</b></div>
           <div class="oddBtn" onclick="apriCarrello('${m.match}','2',${m.odds['2']||2})">2<br><b>@${m.odds['2']||2}</b></div>
         </div>
-        <div class="marketTitle">DOPPIA CHANCE / GOL/NOGOL</div><div class="oddsGrid2">
+        <div class="marketTitle">DOPPIA CHANCE / GOL</div><div class="oddsGrid2">
           <div class="oddBtn" onclick="apriCarrello('${m.match}','1X',${m.odds['1X']||1.25})">1X<br><b>@${m.odds['1X']||1.25}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','X2',${m.odds['X2']||1.35})">X2<br><b>@${m.odds['X2']||1.35}</b></div>
           <div class="oddBtn" onclick="apriCarrello('${m.match}','Gol',${m.odds['Gol']||1.8})">Gol<br><b>@${m.odds['Gol']||1.8}</b></div>
           <div class="oddBtn" onclick="apriCarrello('${m.match}','NoGol',${m.odds['NoGol']||1.85})">NoGol<br><b>@${m.odds['NoGol']||1.85}</b></div>
-        </div>
-        <div class="marketTitle">UNDER / OVER</div><div class="oddsGrid2">
           <div class="oddBtn" onclick="apriCarrello('${m.match}','Over 2.5',${m.odds['Over2.5']||1.9})">Over 2.5<br><b>@${m.odds['Over2.5']||1.9}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','Under 2.5',${m.odds['Under2.5']||1.8})">Under 2.5<br><b>@${m.odds['Under2.5']||1.8}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','Over 1.5',${m.odds['Over1.5']||1.25})">Over 1.5<br><b>@${m.odds['Over1.5']||1.25}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','Under 1.5',${m.odds['Under1.5']||3.0})">Under 1.5<br><b>@${m.odds['Under1.5']||3.0}</b></div>
         </div>
-        <div class="marketTitle">RISULTATO ESATTO (25 ESITI)</div><div class="oddsGrid">
+        <div class="marketTitle">RISULTATO ESATTO (25)</div><div class="oddsGrid">
           ${RIS_ESATTI.map(r=>{const q=(Math.random()*6+5).toFixed(2); return `<div class="oddBtn" onclick="apriCarrello('${m.match}','Ris.Esatto ${r}',${q})">${r}<br><b>@${q}</b></div>`}).join('')}
         </div>
       </div>`;
     });
     html+=`</div>`;
   });
-  if(tot===0) html='<div class="matchCard" style="text-align:center;color:#888">Nessuna partita - Quelle di Diretta.it sono iniziate e tolte automaticamente!</div>';
+  if(tot===0) html='<div class="matchCard" style="text-align:center;color:#888">Nessuna partita ora - Si sono tolte da sole!</div>';
   document.getElementById('leagues').innerHTML=html;
 }
 function toggleLeague(id){const el=document.getElementById('lg_'+id); el.style.display=el.style.display==='none'?'block':'none'; if(el.style.display==='none') el.style.display='block'; else el.style.display='none';}
 function apriCarrello(match, esito, quota){currentBet={match,esito,quota}; document.getElementById('cartMatch').innerText=match; document.getElementById('cartEsito').innerText=esito; document.getElementById('cartQuota').innerText=quota; document.getElementById('carrello').style.display='block'; document.getElementById('stake').oninput=calcWin; calcWin();}
 function chiudiCarrello(){document.getElementById('carrello').style.display='none';}
 function calcWin(){const s=parseFloat(document.getElementById('stake').value||0); document.getElementById('potWin').innerText=(s*(currentBet?.quota||0)).toFixed(2);}
-async function piazzaSchedina(){const stake=parseFloat(document.getElementById('stake').value); if(!stake||stake<1)return alert('Minimo 1€'); if(stake>parseFloat(userProfile.balance))return alert('Saldo insufficiente!'); const {data:{user}}=await supa.auth.getUser(); const pot=stake*currentBet.quota; await supa.from('bets').insert({user_id:user.id, match:currentBet.match+' - '+currentBet.esito, stake:stake, odd:currentBet.quota, potential_win:pot, status:'pending'}); const nuovo=parseFloat(userProfile.balance)-stake; await supa.from('profiles').update({balance:nuovo}).eq('id',user.id); alert('✅ Giocata piazzata!'); chiudiCarrello(); loadProfile(); loadMyBets();}
+async function piazzaSchedina(){
+  const stake=parseFloat(document.getElementById('stake').value);
+  if(!stake||stake<1)return alert('Minimo 1€');
+  if(stake>parseFloat(userProfile.balance))return alert('Saldo insufficiente!');
+  const {data:{user}}=await supa.auth.getUser();
+  const pot=stake*currentBet.quota;
+  // SALVA CON DETTAGLIO COMPLETO
+  const dettaglio = `${currentBet.match} | Esito: ${currentBet.esito} @${currentBet.quota}`;
+  await supa.from('bets').insert({user_id:user.id, match:dettaglio, stake:stake, odd:currentBet.quota, potential_win:pot, status:'pending', selection:currentBet.esito, event_name:currentBet.match});
+  const nuovo=parseFloat(userProfile.balance)-stake;
+  await supa.from('profiles').update({balance:nuovo}).eq('id',user.id);
+  alert('✅ Giocata piazzata! Scorri sotto per vedere il dettaglio');
+  chiudiCarrello(); loadProfile(); loadMyBets();
+}
 async function loadMyBets(){
   const {data:{user}}=await supa.auth.getUser(); if(!user) return;
-  const {data}=await supa.from('bets').select('*').eq('user_id',user.id).order('created_at',{ascending:false}).limit(50);
-  let html=''; if(!data||data.length===0) html='<div class="betHistoryCard" style="color:#888">Nessuna schedina - Gioca e la vedrai qui con ⚪🟢🔴</div>';
+  const {data, error}=await supa.from('bets').select('*').eq('user_id',user.id).order('created_at',{ascending:false}).limit(50);
+  console.log('bets', data, error);
+  let html='';
+  if(error){ html=`<div class="betHistoryCard" style="border-left-color:#ff3344">Errore caricamento: ${error.message}<br>Controlla tabella bets su Supabase</div>`; }
+  else if(!data||data.length===0) html='<div class="betHistoryCard" style="color:#888">Nessuna schedina giocata - Quando giochi la vedrai qui con dettaglio ⚪🟢🔴</div>';
   else data.forEach(b=>{
-    let dot='dot-pending', col='#888', label='⚪ IN CORSO'; if(b.status==='won'){dot='dot-won'; col='#00ff88'; label='🟢 VINTA';} if(b.status==='lost'){dot='dot-lost'; col='#ff3344'; label='🔴 PERSA';}
-    html+=`<div class="betHistoryCard" style="border-left-color:${col}"><span class="dot ${dot}"></span><b>${b.match}</b><br><small>Stake: EUR ${b.stake} @${b.odd} → Pot. EUR ${parseFloat(b.potential_win).toFixed(2)}</small><br><small>${new Date(b.created_at).toLocaleString('it-IT')}</small><br>Stato: <b style="color:${col}">${label}</b></div>`;
+    let dot='dot-pending', col='#888', label='⚪ IN CORSO', stato='In attesa risultato';
+    if(b.status==='won'){dot='dot-won'; col='#00ff88'; label='🟢 VINTA'; stato='Vinta - Pagata';}
+    if(b.status==='lost'){dot='dot-lost'; col='#ff3344'; label='🔴 PERSA'; stato='Persa';}
+    const evento = b.event_name || b.match.split('|')[0] || b.match;
+    const esito = b.selection || (b.match.includes('|')? b.match.split('|')[1] : b.match);
+    html+=`<div class="betHistoryCard" style="border-left-color:${col}">
+      <div style="display:flex;align-items:center;margin-bottom:6px"><span class="dot ${dot}"></span><b style="font-size:14px">${evento}</b></div>
+      <div class="detailRow"><span>Selezione:</span><b>${esito}</b></div>
+      <div class="detailRow"><span>Quota:</span><b>@${b.odd}</b></div>
+      <div class="detailRow"><span>Puntata:</span><b>€ ${parseFloat(b.stake).toFixed(2)}</b></div>
+      <div class="detailRow"><span>Vincita Potenziale:</span><b style="color:gold">€ ${parseFloat(b.potential_win).toFixed(2)}</b></div>
+      <div class="detailRow"><span>Data/Ora:</span><span>${new Date(b.created_at).toLocaleString('it-IT')}</span></div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid #333">Stato: <b style="color:${col}">${label}</b> - <small>${stato}</small></div>
+    </div>`;
   });
   document.getElementById('myBets').innerHTML=html;
 }
