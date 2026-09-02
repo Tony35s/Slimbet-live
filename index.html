@@ -6,93 +6,110 @@ body{background:#0a0a0f;color:#fff;font-family:Arial;margin:0}
 .leagueHeader{background:#15151f;padding:12px 14px;margin:14px 8px 0 8px;border-radius:12px;border:1px solid #333;display:flex;justify-content:space-between;cursor:pointer}
 .leagueHeader b{color:gold}
 .matchCard{background:#1e1e2a;margin:0 8px 8px 8px;border-radius:0 0 12px 12px;padding:10px;border:1px solid #333;border-top:none}
-.marketTitle{color:gold;font-size:12px;font-weight:900;margin:12px 0 6px 0;border-bottom:1px solid #333;padding-bottom:4px}
+.marketTitle{color:gold;font-size:11px;font-weight:900;margin:12px 0 6px 0;border-bottom:1px solid #333;padding-bottom:4px}
 .oddsGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
 .oddsGrid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .oddBtn{background:#111;border:1px solid gold;border-radius:10px;padding:10px;text-align:center;font-size:13px;font-weight:700;cursor:pointer}
 .oddBtn b{color:gold}
-.oddBtn.active{background:gold;color:#000}.oddBtn.active b{color:#000}
+.oddBtn.disabled{opacity:.3;pointer-events:none;border-color:#555}
 input{padding:10px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;width:90%}
 #loginBox{max-width:380px;margin:40px auto;text-align:center;background:#1e1e2a;padding:24px;border-radius:20px;border:1px solid gold}
 #mainApp{display:none}
 .carrello{position:fixed;bottom:0;left:0;right:0;background:#15151f;border-top:2px solid gold;padding:12px;display:none;z-index:100}
+.betHistoryCard{background:#1e1e2a;margin:8px;border-radius:12px;padding:12px;border-left:4px solid #888}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot-pending{background:#888;animation:blink 1s infinite}.dot-won{background:#00ff88}.dot-lost{background:#ff3344}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 </style></head><body>
 <div class="header"><div class="logo">👑 SLIMBET PRO</div><div><span id="userEmail" style="font-size:10px;color:#888"></span> <span class="saldo" id="saldoTop">EUR 0.00</span> <button onclick="logout()" style="background:#222;color:#fff;font-size:11px;padding:6px 10px;border-radius:10px;border:1px solid #444">Esci</button></div></div>
 
 <div id="loginBox"><h2 style="color:gold">Accedi</h2><input id="email" type="email" placeholder="Email"><br><input id="pass" type="password" placeholder="Password"><br><button onclick="login()" style="background:gold;width:95%;margin-top:8px;padding:12px;border-radius:10px;border:none;font-weight:900">ACCEDI</button><button onclick="registra()" style="background:#222;color:#fff;border:1px solid gold;width:95%;padding:12px;border-radius:10px;margin-top:6px">REGISTRATI</button><p id="msg" style="color:#ff5555;font-size:12px"></p></div>
 
 <div id="mainApp">
-<div style="padding:12px"><h3 style="color:gold;margin:0">🔥 Campionati di Oggi</h3><small style="color:#888">Clicca sul campionato per aprire - Quote reali</small></div>
+<div style="padding:12px"><h3 style="color:gold;margin:0">🔥 Partite di Oggi - LIVE</h3><small style="color:#888" id="clock"></small></div>
 <div id="leagues"></div>
-<div style="height:140px"></div>
+
+<div style="padding:12px;margin-top:18px"><h3 style="color:gold;margin:0">🎫 Le Mie Schedine - LIVE</h3><small style="color:#888">Aggiornate dall'admin - Pallini stato</small></div>
+<div id="myBets"></div>
+<div style="height:150px"></div>
 </div>
 
-<div class="carrello" id="carrello"><b id="cartMatch" style="color:gold;font-size:13px"></b><br><small>Esito: <b id="cartEsito"></b> @ <b id="cartQuota"></b></small><br><div style="margin-top:8px"><input id="stake" type="number" placeholder="Importo €" style="width:110px"> Vincita: EUR <b id="potWin">0.00</b></div><button onclick="piazzaSchedina()" style="background:gold;width:100%;margin-top:8px;padding:12px;border-radius:10px;border:none;font-weight:900">🎫 GIOCA</button><button onclick="chiudiCarrello()" style="background:#222;color:#fff;width:100%;padding:10px;border-radius:10px;border:1px solid #444;margin-top:4px">Chiudi</button></div>
+<div class="carrello" id="carrello"><b id="cartMatch" style="color:gold;font-size:13px"></b><br><small>Esito: <b id="cartEsito"></b> @ <b id="cartQuota"></b></small><br><div style="margin-top:8px"><input id="stake" type="number" placeholder="Importo €" style="width:110px"> Vincita: EUR <b id="potWin">0.00</b></div><button onclick="piazzaSchedina()" style="background:gold;width:100%;margin-top:8px;padding:12px;border-radius:10px;border:none;font-weight:900">🎫 GIOCA SCHEDINA</button><button onclick="chiudiCarrello()" style="background:#222;color:#fff;width:100%;padding:10px;border-radius:10px;border:1px solid #444;margin-top:4px">Chiudi</button></div>
 
 <script>
 const SUPABASE_URL='https://qooxqqdcfcfncexjhddo.supabase.co';
 const SUPABASE_KEY='sb_publishable_6SH5fbxXEiI7wFrvo_YghQ_o4PU9EFA';
 const supa=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentBet=null, userProfile=null;
+let currentBet=null, userProfile=null, myBetsTimer=null;
 
 const PARTITE_OGGI = [
-  {id:'dfb1', league:'🇩🇪 DFB Pokal - Germania', match:'HEBC Hamburg vs Borussia Dortmund', time:'20:45', odds:{'1':12.0,'X':7.5,'2':1.08,'1X':4.5,'X2':1.05,'12':1.07,'Gol':2.1,'NoGol':1.65,'Over2.5':1.25,'Under2.5':3.8,'Over1.5':1.12,'Under1.5':5.5}},
-  {id:'champ1', league:'🏴󐁧󐁢󐁥󐁮󐁧󐁿 Championship - Inghilterra', match:'Lincoln City vs Blackburn Rovers', time:'20:45', odds:{'1':2.80,'X':3.20,'2':2.45,'1X':1.48,'X2':1.38,'12':1.32,'Gol':1.75,'NoGol':1.95,'Over2.5':1.95,'Under2.5':1.80,'Over1.5':1.30,'Under1.5':3.20}},
-  {id:'champ2', league:'🏴󐁧󐁢󐁥󐁮󐁧󐁿 Championship - Inghilterra', match:'Stoke City vs Norwich City', time:'21:00', odds:{'1':2.40,'X':3.30,'2':2.85,'1X':1.40,'X2':1.52,'12':1.30,'Gol':1.70,'NoGol':2.00,'Over2.5':1.85,'Under2.5':1.90}},
-  {id:'l2_1', league:'🏴󐁧󐁢󐁥󐁮󐁧󐁿 League Two - Inghilterra', match:'Chesterfield vs Gillingham', time:'20:45', odds:{'1':2.10,'X':3.40,'2':3.20}},
-  {id:'us1', league:'🎾 US Open - Tennis', match:'Flavio Cobolli vs Francisco Comesana', time:'17:00', odds:{'1':1.65,'2':2.20}},
-  {id:'us2', league:'🎾 US Open - Tennis', match:'Taylor Fritz vs Darwin Blanch', time:'18:40', odds:{'1':1.07,'2':8.50}},
+  {id:'us1', league:'🎾 US Open - 2° Turno', match:'Jasmine Paolini vs Lucrezia Stefanini', time:'17:00', start:'2026-09-02T17:00:00+02:00', odds:{'1':1.22,'2':4.10,'1X':1.10,'X2':1.35,'Gol':1.80,'NoGol':1.90,'Over2.5':2.20,'Under2.5':1.65}},
+  {id:'us2', league:'🎾 US Open - 2° Turno', match:'Alexander Zverev vs Lorenzo Sonego', time:'23:00', start:'2026-09-02T23:00:00+02:00', odds:{'1':1.18,'2':4.80,'Over2.5':1.65}},
+  {id:'it1', league:'🇮🇹 Serie C - Italia', match:'Benevento vs Catania', time:'20:45', start:'2026-09-02T20:45:00+02:00', odds:{'1':2.10,'X':3.10,'2':3.40,'1X':1.25,'X2':1.62,'Gol':1.85,'NoGol':1.85,'Over2.5':2.05,'Under2.5':1.72}},
+  {id:'it2', league:'🇮🇹 Serie C - Italia', match:'Padova vs Vicenza', time:'20:45', start:'2026-09-02T20:45:00+02:00', odds:{'1':2.25,'X':3.00,'2':3.10,'Gol':1.90,'Over2.5':2.10}},
+  {id:'eng1', league:'🏴󐁧󐁢󐁥󐁮󐁧󐁿 EFL Trophy - Inghilterra', match:'Bradford vs Man Utd U21', time:'20:00', start:'2026-09-02T20:00:00+02:00', odds:{'1':1.85,'X':3.60,'2':3.80,'Over2.5':1.60}},
+  {id:'u21_1', league:'🇪🇺 U21 Qualificazioni', match:'Italia U21 vs Norvegia U21', time:'18:00', start:'2026-09-02T18:00:00+02:00', odds:{'1':1.65,'X':3.80,'2':4.50,'Gol':1.75,'Over2.5':1.70}},
 ];
+const RIS_ESATTI = ['1-0','2-0','2-1','3-0','3-1','3-2','0-0','1-1','2-2','0-1','0-2','1-2','0-3','1-3','2-3','Altro'];
 
-const RIS_ESATTI = ['1-0','2-0','2-1','3-0','3-1','3-2','4-0','4-1','0-0','1-1','2-2','0-1','0-2','1-2','0-3','1-3','2-3','0-4','1-4','Altro'];
+function isLive(startIso){ return new Date() >= new Date(startIso); }
 
-async function checkSession(){const {data}=await supa.auth.getSession(); if(data.session){document.getElementById('loginBox').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('userEmail').innerText=data.session.user.email; loadProfile(); renderLeagues();}}
+async function checkSession(){const {data}=await supa.auth.getSession(); if(data.session){document.getElementById('loginBox').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('userEmail').innerText=data.session.user.email; loadProfile(); startAll();}}
 checkSession();
-async function registra(){const e=document.getElementById('email').value,p=document.getElementById('pass').value;const {data,error}=await supa.auth.signUp({email:e,password:p}); if(error){document.getElementById('msg').innerText=error.message;return;} await supa.from('profiles').insert({id:data.user.id,email:e,balance:0}); alert('Registrato! Accedi.');}
-async function login(){const e=document.getElementById('email').value,p=document.getElementById('pass').value;const {data,error}=await supa.auth.signInWithPassword({email:e,password:p}); if(error){document.getElementById('msg').innerText=error.message;return;} document.getElementById('loginBox').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('userEmail').innerText=data.user.email; loadProfile(); renderLeagues();}
+async function registra(){const e=document.getElementById('email').value,p=document.getElementById('pass').value;const {data,error}=await supa.auth.signUp({email:e,password:p}); if(error){document.getElementById('msg').innerText=error.message;return;} await supa.from('profiles').insert({id:data.user.id,email:e,balance:0}); alert('Registrato! Ora accedi.');}
+async function login(){const e=document.getElementById('email').value,p=document.getElementById('pass').value;const {data,error}=await supa.auth.signInWithPassword({email:e,password:p}); if(error){document.getElementById('msg').innerText=error.message;return;} document.getElementById('loginBox').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('userEmail').innerText=data.user.email; loadProfile(); startAll();}
 async function logout(){await supa.auth.signOut();location.reload();}
 async function loadProfile(){const {data:{user}}=await supa.auth.getUser();const {data}=await supa.from('profiles').select('*').eq('id',user.id).single(); userProfile=data; document.getElementById('saldoTop').innerText='EUR '+parseFloat(data.balance||0).toFixed(2);}
 
+function startAll(){ renderLeagues(); loadMyBets(); setInterval(()=>{ renderLeagues(); loadMyBets(); document.getElementById('clock').innerText=new Date().toLocaleTimeString('it-IT')+' - Auto-aggiornamento partite'; }, 30000); }
+
 function renderLeagues(){
-  const groups={}; PARTITE_OGGI.forEach(p=>{ if(!groups[p.league]) groups[p.league]=[]; groups[p.league].push(p); });
-  let html=''; Object.keys(groups).forEach(league=>{
-    html+=`<div class="leagueHeader" onclick="toggleLeague('${league.replace(/[^a-zA-Z0-9]/g,'')}')"><b>${league}</b><span>▼</span></div><div id="lg_${league.replace(/[^a-zA-Z0-9]/g,'')}" style="display:none">`;
+  const groups={}; PARTITE_OGGI.forEach(p=>{ if(isLive(p.start)) return; if(!groups[p.league]) groups[p.league]=[]; groups[p.league].push(p); });
+  let html=''; let tot=0; Object.keys(groups).forEach(league=>{
+    const safeId=league.replace(/[^a-z0-9]/gi,''); tot+=groups[league].length;
+    html+=`<div class="leagueHeader" onclick="toggleLeague('${safeId}')"><b>${league} (${groups[league].length})</b><span>▼</span></div><div id="lg_${safeId}">`;
     groups[league].forEach(m=>{
-      html+=`<div class="matchCard"><b>${m.match}</b> <small style="color:#888">- ${m.time}</small>
+      html+=`<div class="matchCard"><b>${m.match}</b> <small style="color:#888">- ${m.time}</small> <small style="color:gold"> - LIVE fino a ${m.time}</small>
         <div class="marketTitle">ESITO 1X2</div><div class="oddsGrid">
           <div class="oddBtn" onclick="apriCarrello('${m.match}','1',${m.odds['1']||2})">1<br><b>@${m.odds['1']||2}</b></div>
           <div class="oddBtn" onclick="apriCarrello('${m.match}','X',${m.odds['X']||3.2})">X<br><b>@${m.odds['X']||3.2}</b></div>
           <div class="oddBtn" onclick="apriCarrello('${m.match}','2',${m.odds['2']||2})">2<br><b>@${m.odds['2']||2}</b></div>
         </div>
-        <div class="marketTitle">DOPPIA CHANCE</div><div class="oddsGrid">
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','1X',${m.odds['1X']||1.4})">1X<br><b>@${m.odds['1X']||1.4}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','X2',${m.odds['X2']||1.4})">X2<br><b>@${m.odds['X2']||1.4}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','12',${m.odds['12']||1.3})">12<br><b>@${m.odds['12']||1.3}</b></div>
-        </div>
-        <div class="marketTitle">GOL / NO GOL</div><div class="oddsGrid2">
+        <div class="marketTitle">DOPPIA CHANCE / GOL</div><div class="oddsGrid2">
+          <div class="oddBtn" onclick="apriCarrello('${m.match}','1X',${m.odds['1X']||1.25})">1X<br><b>@${m.odds['1X']||1.25}</b></div>
           <div class="oddBtn" onclick="apriCarrello('${m.match}','Gol',${m.odds['Gol']||1.8})">Gol<br><b>@${m.odds['Gol']||1.8}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','NoGol',${m.odds['NoGol']||1.9})">NoGol<br><b>@${m.odds['NoGol']||1.9}</b></div>
+          <div class="oddBtn" onclick="apriCarrello('${m.match}','NoGol',${m.odds['NoGol']||1.85})">NoGol<br><b>@${m.odds['NoGol']||1.85}</b></div>
+          <div class="oddBtn" onclick="apriCarrello('${m.match}','Over 2.5',${m.odds['Over2.5']||1.9})">Over 2.5<br><b>@${m.odds['Over2.5']||1.9}</b></div>
         </div>
-        <div class="marketTitle">UNDER / OVER</div><div class="oddsGrid2">
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','Over 2.5',${m.odds['Over2.5']||1.85})">Over 2.5<br><b>@${m.odds['Over2.5']||1.85}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','Under 2.5',${m.odds['Under2.5']||1.85})">Under 2.5<br><b>@${m.odds['Under2.5']||1.85}</b></div>
+        <div class="marketTitle">UNDER/OVER</div><div class="oddsGrid2">
           <div class="oddBtn" onclick="apriCarrello('${m.match}','Over 1.5',${m.odds['Over1.5']||1.25})">Over 1.5<br><b>@${m.odds['Over1.5']||1.25}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','Under 1.5',${m.odds['Under1.5']||3.5})">Under 1.5<br><b>@${m.odds['Under1.5']||3.5}</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','Over 0.5',1.05)">Over 0.5<br><b>@1.05</b></div>
-          <div class="oddBtn" onclick="apriCarrello('${m.match}','Under 3.5',1.45)">Under 3.5<br><b>@1.45</b></div>
+          <div class="oddBtn" onclick="apriCarrello('${m.match}','Under 2.5',${m.odds['Under2.5']||1.8})">Under 2.5<br><b>@${m.odds['Under2.5']||1.8}</b></div>
         </div>
         <div class="marketTitle">RISULTATO ESATTO (25 ESITI)</div><div class="oddsGrid">
-          ${RIS_ESATTI.map(r=>`<div class="oddBtn" onclick="apriCarrello('${m.match}','Ris.Esatto ${r}',${(Math.random()*6+5).toFixed(2)})">${r}<br><b>@${(Math.random()*6+5).toFixed(2)}</b></div>`).join('')}
+          ${RIS_ESATTI.map(r=>{const q=(Math.random()*6+5).toFixed(2); return `<div class="oddBtn" onclick="apriCarrello('${m.match}','Ris.Esatto ${r}',${q})">${r}<br><b>@${q}</b></div>`}).join('')}
         </div>
       </div>`;
     });
     html+=`</div>`;
   });
+  if(tot===0) html='<div class="matchCard" style="text-align:center;color:#888">Nessuna partita disponibile ora - le partite iniziate si tolgono automaticamente. Torna domani!</div>';
   document.getElementById('leagues').innerHTML=html;
 }
-function toggleLeague(id){const el=document.getElementById('lg_'+id); el.style.display=el.style.display==='none'?'block':'none';}
+function toggleLeague(id){const el=document.getElementById('lg_'+id); el.style.display=el.style.display==='none'?'none':'block'; if(el.style.display==='none') el.style.display='block'; else el.style.display='none';}
+
 function apriCarrello(match, esito, quota){currentBet={match,esito,quota}; document.getElementById('cartMatch').innerText=match; document.getElementById('cartEsito').innerText=esito; document.getElementById('cartQuota').innerText=quota; document.getElementById('carrello').style.display='block'; document.getElementById('stake').oninput=calcWin; calcWin();}
 function chiudiCarrello(){document.getElementById('carrello').style.display='none';}
 function calcWin(){const s=parseFloat(document.getElementById('stake').value||0); document.getElementById('potWin').innerText=(s*(currentBet?.quota||0)).toFixed(2);}
-async function piazzaSchedina(){const stake=parseFloat(document.getElementById('stake').value); if(!stake||stake<1)return alert('Minimo 1€'); if(stake>parseFloat(userProfile.balance))return alert('Saldo insufficiente!'); const {data:{user}}=await supa.auth.getUser(); const pot=stake*currentBet.quota; await supa.from('bets').insert({user_id:user.id, match:currentBet.match+' - '+currentBet.esito, stake:stake, odd:currentBet.quota, potential_win:pot, status:'pending'}); const nuovo=parseFloat(userProfile.balance)-stake; await supa.from('profiles').update({balance:nuovo}).eq('id',user.id); alert('✅ Giocata! '+currentBet.esito+' @'+currentBet.quota); chiudiCarrello(); loadProfile();}
+async function piazzaSchedina(){const stake=parseFloat(document.getElementById('stake').value); if(!stake||stake<1)return alert('Minimo 1€'); if(stake>parseFloat(userProfile.balance))return alert('Saldo insufficiente!'); const {data:{user}}=await supa.auth.getUser(); const pot=stake*currentBet.quota; await supa.from('bets').insert({user_id:user.id, match:currentBet.match+' - '+currentBet.esito, stake:stake, odd:currentBet.quota, potential_win:pot, status:'pending'}); const nuovo=parseFloat(userProfile.balance)-stake; await supa.from('profiles').update({balance:nuovo}).eq('id',user.id); alert('✅ Giocata piazzata!'); chiudiCarrello(); loadProfile(); loadMyBets();}
+
+async function loadMyBets(){
+  const {data:{user}}=await supa.auth.getUser(); if(!user) return;
+  const {data}=await supa.from('bets').select('*').eq('user_id',user.id).order('created_at',{ascending:false}).limit(50);
+  let html=''; if(!data||data.length===0) html='<div class="betHistoryCard" style="color:#888">Nessuna schedina giocata</div>';
+  else data.forEach(b=>{
+    let dot='dot-pending', col='#888', label='IN CORSO'; if(b.status==='won'){dot='dot-won'; col='#00ff88'; label='VINTA 🟢';} if(b.status==='lost'){dot='dot-lost'; col='#ff3344'; label='PERSA 🔴';}
+    html+=`<div class="betHistoryCard" style="border-left-color:${col}"><span class="dot ${dot}"></span><b>${b.match}</b><br><small>Stake: EUR ${b.stake} @${b.odd} → Vincita Pot: EUR ${parseFloat(b.potential_win).toFixed(2)}</small><br><small>Data: ${new Date(b.created_at).toLocaleString('it-IT')}</small><br>Stato: <b style="color:${col}">${label}</b></div>`;
+  });
+  document.getElementById('myBets').innerHTML=html;
+}
 </script></body></html>
